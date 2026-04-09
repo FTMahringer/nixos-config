@@ -2,5 +2,6 @@
   imports = [
     ./core
     ./programs
+    ./shell
   ];
 }
