@@ -1,0 +1,11 @@
+# nix
+result
+result-*
+
+# flake lock
+flake.lock
+
+# secrets
+*.age
+*.key
+*.pem
