@@ -1,9 +1,8 @@
-{ pkgs, ... }:
-
 {
   programs.yazi = {
     enable = true;
-    enableZshIntegration = true; # adds `y` shell wrapper that cds on exit
+    enableZshIntegration = true; # adds shell wrapper that cds on exit
+    shellWrapperName = "y";      # explicit: silence deprecation warning
 
     settings = {
       manager = {
@@ -18,21 +17,6 @@
         tab_size = 2;
         max_width = 600;
         max_height = 900;
-      };
-    };
-
-    theme = {
-      flavor = {
-        use = "gruvbox-dark";
-      };
-    };
-
-    flavors = {
-      gruvbox-dark = pkgs.fetchFromGitHub {
-        owner = "bennyyip";
-        repo = "gruvbox-dark.yazi";
-        rev = "main";
-        sha256 = "sha256-mH6QTQQPJNR3GVpa09UpFMcaOTJN4IqdRuDsTLKGxk=";
       };
     };
 
