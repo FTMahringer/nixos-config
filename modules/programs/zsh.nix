@@ -5,13 +5,13 @@ let
 in
 {
   options.ft.programs.zsh = {
-    enable = lib.mkEnableOption = "Zsh";
-  }
+    enable = lib.mkEnableOption "Zsh";
+  };
 
-  config = lib.mkIf cfg.enable = {
+  config = lib.mkIf cfg.enable {
     programs.zsh.enable = true;
 
-    environment.systemvariables = with pkgs; [
+    environment.systemPackages = with pkgs; [
       zsh
     ];
   };

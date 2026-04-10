@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ ... }:
 
 {
   imports =
@@ -11,10 +11,11 @@
 
   users.users.fynn = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    description = "Fynn";
+    extraGroups = [ "wheel" "networkmanager" ];
   };
 
-  ft.programs.neovim.enable = true;
+  #ft.programs.neovim.enable = true;
   ft.programs.git.enable = true;
   ft.programs.zsh.enable = true;
 
