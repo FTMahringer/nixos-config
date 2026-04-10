@@ -1,9 +1,11 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 let
   cfg = config.ft.programs.zsh;
 in
 {
+  imports = [ inputs.nix-your-shell.nixosModules.default ];
+
   options.ft.programs.zsh = {
     enable = lib.mkEnableOption "Zsh";
   };
