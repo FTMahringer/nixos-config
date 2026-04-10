@@ -5,5 +5,6 @@
     ./eza.nix
     ./bat.nix
     ./direnv.nix
+    ./yazi.nix
   ];
 }
