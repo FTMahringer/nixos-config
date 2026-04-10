@@ -4,6 +4,8 @@ let
   cfg = config.ft.system.impermanence;
 in
 {
+  imports = [ inputs.impermanence.nixosModules.impermanence ];
+
   options.ft.system.impermanence = {
     enable = lib.mkEnableOption "Impermanence - ephemeral root filesystem";
 
@@ -27,8 +29,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    imports = [ inputs.impermanence.nixosModules.impermanence ];
-
     # The persistent storage directory
     environment.persistence.${cfg.persistDir} = {
       enable = true;
@@ -53,19 +53,6 @@ in
     # fileSystems."/persist" = {
     #   device = "/dev/disk/by-label/persist";
     #   fsType = "ext4";
-    #   neededForBoot = true;
-    # };
-    #
-    # OR for tmpfs root with BTRFS subvolumes:
-    # fileSystems."/" = {
-    #   device = "none";
-    #   fsType = "tmpfs";
-    #   options = [ "defaults" "size=25%" "mode=755" ];
-    # };
-    # fileSystems."/persist" = {
-    #   device = "/dev/your-disk";
-    #   fsType = "btrfs";
-    #   options = [ "subvol=persistent" ];
     #   neededForBoot = true;
     # };
   };
