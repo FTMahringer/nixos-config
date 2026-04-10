@@ -33,7 +33,7 @@
 
     # Custom init extra (runs after oh-my-zsh)
     # Note: nix-your-shell is handled in system module
-    initExtra = ''
+    initContent = ''
       # Custom keybindings
       bindkey "^[[H" beginning-of-line
       bindkey "^[[F" end-of-line
