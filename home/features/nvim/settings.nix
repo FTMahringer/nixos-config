@@ -107,14 +107,18 @@
           }
         ];
 
-        luaConfigPost = ''
+        # Note: luaConfigRC is now a DAG type in newer NVF versions
+        # Use luaConfigPre or luaConfigPost for plain string config
+        luaConfigPre = ''
           vim.opt.clipboard = "unnamedplus"
           vim.opt.backspace = { "indent", "eol", "start" }
 
           if vim.env.TERM ~= "linux" then
             vim.opt.termguicolors = true
           end
+        '';
 
+        luaConfigPost = ''
           vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
             pattern = "*.nix",
             callback = function()
