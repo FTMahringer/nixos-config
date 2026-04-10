@@ -5,6 +5,12 @@
     shellWrapperName = "y";      # explicit: silence deprecation warning
 
     settings = {
+      opener = {
+        edit = [
+          { run = ''nvim "$@"''; block = true; desc = "Edit with nvim"; }
+        ];
+      };
+
       manager = {
         show_hidden = false;
         sort_by = "natural";

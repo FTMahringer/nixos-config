@@ -1,4 +1,9 @@
 {
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
+
   programs.zsh = {
     enable = true;
 
@@ -63,6 +68,18 @@
       setopt NO_BEEP
       setopt HIST_IGNORE_ALL_DUPS
       setopt HIST_FIND_NO_DUPS
+
+      function accept-line-or-clear() {
+        if [[ -z "$BUFFER" ]]; then
+          clear
+          zle reset-prompt
+        else
+          zle accept-line
+        fi
+      }
+
+      zle -N accept-line-or-clear
+      bindkey '^M' accept-line-or-clear
     '';
   };
 }
