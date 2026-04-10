@@ -2,8 +2,7 @@
 
 {
   imports = [
-    ./git.nix
-    ./nvim
-    ./shell
+    ./zsh
+    ./fish
   ];
 }
