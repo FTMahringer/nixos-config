@@ -3,6 +3,7 @@
 {
   programs.nvf = {
     enable = true;
+    defaultEditor = "nvim";
     enableManpages = true;
 
     settings = {
