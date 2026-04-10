@@ -4,6 +4,8 @@ let
   cfg = config.ft.security.sops;
 in
 {
+  imports = [ inputs.sops-nix.nixosModules.sops ];
+
   options.ft.security.sops = {
     enable = lib.mkEnableOption "SOPS secrets management";
 
@@ -21,8 +23,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    imports = [ inputs.sops-nix.nixosModules.sops ];
-
     sops = {
       # Age private key for decryption
       age.keyFile = cfg.ageKeyFile;
