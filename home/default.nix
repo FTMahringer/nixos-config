@@ -2,11 +2,12 @@
 
 {
   imports = [
-    ./programs
-    ./shell
+    ./features
   ];
 
-  home.username = "fynn";
-  home.homeDirectory = "/home/fynn";
-  home.stateVersion = "25.11";
+  home = {
+    username = "fynn";
+    homeDirectory = "/home/fynn";
+    stateVersion = "25.11";
+  };
 }

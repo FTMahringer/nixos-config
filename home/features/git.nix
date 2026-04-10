@@ -3,8 +3,8 @@
     enable = true;
     settings = {
       user = {
-        Name = "Fynn Mahringer";
-        Email = "fynn.mahringer@outlook.com";
+        name = "Fynn Mahringer";
+        email = "fynn.mahringer@outlook.com";
       };
     };
   };

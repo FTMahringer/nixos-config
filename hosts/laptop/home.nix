@@ -6,5 +6,5 @@
 
   home-manager.extraSpecialArgs = { inherit inputs; };
 
-  home-manager.users.fynn = import ../../home.nix;
+  home-manager.users.fynn = import ../../home;
 }
