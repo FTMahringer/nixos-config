@@ -47,10 +47,16 @@ This repository contains a personal NixOS configuration with the following goals
 │   │   ├── default.nix
 │   │   ├── base.nix             # Boot, timezone, networking, SSH
 │   │   └── packages.nix         # Core system packages (curl, htop, fastfetch)
-│   └── programs/                # Program modules (system-level)
+│   ├── programs/                # Program modules (system-level)
+│   │   ├── default.nix
+│   │   ├── git.nix              # Git system config (ft.programs.git)
+│   │   └── zsh.nix              # Zsh system config (ft.programs.zsh)
+│   ├── security/                # Security modules
+│   │   ├── default.nix
+│   │   └── sops.nix             # Secrets management (ft.security.sops)
+│   └── system/                  # System-level features
 │       ├── default.nix
-│       ├── git.nix              # Git system config (ft.programs.git)
-│       └── zsh.nix              # Zsh system config (ft.programs.zsh)
+│       └── impermanence.nix     # Ephemeral root (ft.system.impermanence)
 │
 └── home/                        # Home Manager configuration
     ├── default.nix              # Entry point (username, imports)
@@ -244,6 +250,140 @@ console.keyMap = "de";
 
 ---
 
+## Development Tools
+
+This configuration includes several flakes to improve the development workflow:
+
+| Tool | Purpose | Command |
+|------|---------|---------|
+| **treefmt-nix** | Format all code | `nix fmt` |
+| **git-hooks.nix** | Pre-commit checks | `nix flake check` |
+| **nix-your-shell** | Keep zsh in nix shell | Automatic |
+| **sops-nix** | Secrets management | See [Secrets](#secrets-management) |
+| **impermanence** | Ephemeral root | See [Impermanence](#impermanence) |
+
+### Testing in a VM
+
+Before deploying to hardware, test changes in a VM:
+
+```bash
+nixos-rebuild build-vm --flake .#laptop-vm
+./result/bin/run-nixos-vm
+```
+
+Login with `fynn` / `vm`.
+
+### Formatting Code
+
+```bash
+nix fmt        # Format all Nix, shell, and markdown files
+```
+
+### Pre-commit Checks
+
+```bash
+nix flake check    # Run statix (lint) and deadnix (dead code detection)
+```
+
+### nix-your-shell
+
+When you run `nix shell nixpkgs#somepackage`, you normally lose your zsh configuration. With `nix-your-shell`, you stay in zsh with all your settings.
+
+---
+
+## Secrets Management (sops-nix)
+
+Secrets are encrypted with [SOPS](https://github.com/getsops/sops) and decrypted at build time.
+
+### Setup
+
+1. **Generate an age key**:
+   ```bash
+   mkdir -p ~/.config/sops/age
+   age-keygen -o ~/.config/sops/age/keys.txt
+   ```
+
+2. **Get your public key**:
+   ```bash
+   age-keygen -y ~/.config/sops/age/keys.txt
+   # Outputs: age1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   ```
+
+3. **Edit `secrets/.sops.yaml`** - replace `YOUR_AGE_PUBLIC_KEY_HERE` with your key
+
+4. **Create and encrypt secrets**:
+   ```bash
+   cp secrets/secrets.example.yaml secrets/secrets.yaml
+   # Edit secrets.yaml with your actual secrets
+   sops secrets/secrets.yaml  # Encrypts the file
+   ```
+
+5. **Enable in your host config**:
+   ```nix
+   ft.security.sops.enable = true;
+   ```
+
+6. **Copy the age key to your NixOS system**:
+   ```bash
+   sudo mkdir -p /var/lib/sops/age
+   sudo cp ~/.config/sops/age/keys.txt /var/lib/sops/age/
+   sudo chmod 700 /var/lib/sops/age
+   sudo chmod 600 /var/lib/sops/age/keys.txt
+   ```
+
+### Usage in Config
+
+```nix
+# Access a secret
+config.sops.secrets.my_password.path
+```
+
+---
+
+## Impermanence
+
+[Impermanence](https://github.com/nix-community/impermanence) makes your root filesystem ephemeral - it resets on every boot. Only `/persist` and `/home` are kept.
+
+### Prerequisites
+
+- A separate partition labeled `persist` mounted at `/persist`
+- Backups! This is destructive if misconfigured
+
+### Setup
+
+1. **Create a persist partition** (ext4, labeled "persist")
+
+2. **Enable in your host config**:
+   ```nix
+   ft.system.impermanence.enable = true;
+   ft.system.impermanence.directories = [
+     "/var/lib/bluetooth"  # Keep Bluetooth pairings
+   ];
+   ```
+
+3. **Add home persistence** in `home/default.nix`:
+   ```nix
+   imports = [ inputs.impermanence.nixosModules.home-manager.impermanence ];
+   
+   home.persistence."/persist/home/fynn" = {
+     directories = [
+       "Documents"
+       "Downloads"
+       ".ssh"
+       ".local/share"
+     ];
+   };
+   ```
+
+### Benefits
+
+- **Clean system** on every boot
+- **No state accumulation**
+- **Easy rollback** - reboot fixes most issues
+- **Forces good habits** - config must be in git
+
+---
+
 ## Future Plans
 
 - [ ] Move repo from `/etc/nixos` to `~/projects/ft-nixos`
@@ -251,7 +391,6 @@ console.keyMap = "de";
 - [ ] Integrate Stylix for unified theming
 - [ ] Add Hyprland/Wayland setup
 - [ ] Expand NVF config
-- [ ] Secrets management (agenix or sops-nix)
 
 ---
 
