@@ -1,5 +1,8 @@
 {
   imports = [
-    ./settings.nix
+    ./zsh.nix
+    ./starship.nix
+    ./aliases.nix
+    ./tools
   ];
 }
