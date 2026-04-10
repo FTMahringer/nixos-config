@@ -36,7 +36,6 @@ in
 
       # System directories to persist
       directories = [
-        "/etc/nixos"           # Your config
         "/var/log"             # Logs
         "/var/lib/nixos"       # NixOS state (UID/GID mappings)
         "/var/lib/systemd"     # Systemd state
@@ -49,14 +48,25 @@ in
       ] ++ cfg.files;
     };
 
-    # User persistence is configured in home manager
-    # This is just the system-level setup
-
-    # Ensure persist directory exists
-    fileSystems.${cfg.persistDir} = lib.mkDefault {
-      device = "/dev/disk/by-label/persist";
-      fsType = "ext4";
-      neededForBoot = true;
-    };
+    # NOTE: You must define the fileSystem for /persist in your host config!
+    # Example:
+    # fileSystems."/persist" = {
+    #   device = "/dev/disk/by-label/persist";
+    #   fsType = "ext4";
+    #   neededForBoot = true;
+    # };
+    #
+    # OR for tmpfs root with BTRFS subvolumes:
+    # fileSystems."/" = {
+    #   device = "none";
+    #   fsType = "tmpfs";
+    #   options = [ "defaults" "size=25%" "mode=755" ];
+    # };
+    # fileSystems."/persist" = {
+    #   device = "/dev/your-disk";
+    #   fsType = "btrfs";
+    #   options = [ "subvol=persistent" ];
+    #   neededForBoot = true;
+    # };
   };
 }
