@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   programs.nvf = {
@@ -53,8 +53,8 @@
 
         autocomplete.nvim-cmp.enable = true;
 
+        lsp.enable = true;
         languages = {
-          enableLSP = true;
           enableTreesitter = true;
           enableFormat = true;
 
@@ -107,7 +107,7 @@
           }
         ];
 
-        luaConfigRC.myconfig = lib.nvim.dag.entryAnywhere ''
+        luaConfigPost = ''
           vim.opt.clipboard = "unnamedplus"
           vim.opt.backspace = { "indent", "eol", "start" }
 
