@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.nvf = {
@@ -107,7 +107,7 @@
           }
         ];
 
-        luaConfigRC = ''
+        luaConfigRC.myconfig = lib.nvim.dag.entryAnywhere ''
           vim.opt.clipboard = "unnamedplus"
           vim.opt.backspace = { "indent", "eol", "start" }
 
