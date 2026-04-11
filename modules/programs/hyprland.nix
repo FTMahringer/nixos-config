@@ -38,6 +38,11 @@ in
     # Polkit — required for privilege escalation in Wayland sessions
     security.polkit.enable = true;
 
+    # Disable fingerprint auth for hyprlock — prevents the spurious
+    # "authentication failed (1)" on lock (fprintd tries fingerprint first,
+    # fails immediately, then falls back to password).
+    security.pam.services.hyprlock.fprintAuth = false;
+
     # Login manager: greetd + tuigreet (minimal TUI greeter)
     # Session file comes from the flake's Hyprland package directly.
     services.greetd = {
