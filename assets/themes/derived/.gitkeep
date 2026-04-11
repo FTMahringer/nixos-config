@@ -1,0 +1,3 @@
+# Derived themes go in subdirectories here.
+# A derived theme.nix inherits all values from a base theme and overrides
+# only the fields it needs.  See assets/themes/README.md for the full format.

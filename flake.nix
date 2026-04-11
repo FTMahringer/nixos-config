@@ -38,12 +38,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Unified theming (base16 colors, fonts, cursor, opacity)
-    stylix = {
-      url = "github:danth/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Secrets management
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -54,9 +48,15 @@
     impermanence = {
       url = "github:nix-community/impermanence";
     };
+
+    nixpalette = {
+      url = "github:FTMahringer/nixpalette";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, home-manager, nixpalette, ... }: {
     nixosConfigurations = {
       laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -65,7 +65,8 @@
         modules = [
           ./hosts/laptop/configuration.nix
           home-manager.nixosModules.home-manager
-          inputs.stylix.nixosModules.stylix
+          # nixpalette includes stylix — do NOT also load inputs.stylix.nixosModules.stylix
+          inputs.nixpalette.nixosModules.default
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
           }

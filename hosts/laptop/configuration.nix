@@ -20,11 +20,20 @@
   ft.programs.git.enable = true;
   ft.programs.zsh.enable = true;
 
-  # Theming (Stylix) — change scheme here to retheme everything
+  # Theming (nixpalette → Stylix) — change theme here to retheme everything.
+  # Theme IDs:  "builtin:base/<name>"  |  "user:base/<name>"  |  "user:derived/<name>"
+  # Built-ins: catppuccin-mocha, nord
+  # See assets/themes/ for user themes you can add.
   ft.theming.enable = true;
-  # ft.theming.scheme = "catppuccin-mocha";   # override default (gruvbox-dark-medium)
-  # ft.theming.polarity = "dark";
-  # ft.theming.wallpaper = ../../assets/wallpapers/my-wallpaper.png;
+  ft.theming.theme = "builtin:base/catppuccin-mocha";
+  ft.theming.userThemeDir = ../../assets/themes;
+
+  # Boot-menu specialisations — each generates an alternate system config.
+  # Switch at boot or via: nixos-rebuild switch --specialisation <name>
+  ft.theming.specialisations = {
+    nord    = "builtin:base/nord";
+    gruvbox = "user:base/gruvbox";
+  };
 
   # --- OPTIONAL: Secrets Management (sops-nix) ---
   # 1. Generate age key: mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/keys.txt

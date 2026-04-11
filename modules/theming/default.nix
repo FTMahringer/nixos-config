@@ -2,105 +2,89 @@
 
 let
   cfg = config.ft.theming;
-
-  # Generate a solid-color default wallpaper when none is provided.
-  # Stylix requires an image; this keeps the config buildable out-of-the-box.
-  defaultWallpaper = pkgs.runCommand "default-wallpaper.png"
-    {
-      nativeBuildInputs = [ pkgs.imagemagick ];
-    } ''
-    magick -size 3840x2160 xc:"#1d2021" png24:$out
-  '';
 in
 {
   options.ft.theming = {
-    enable = lib.mkEnableOption "Stylix-based global theming";
+    enable = lib.mkEnableOption "nixpalette-based global theming";
 
-    scheme = lib.mkOption {
+    theme = lib.mkOption {
       type = lib.types.str;
-      default = "gruvbox-dark-medium";
+      default = "builtin:base/catppuccin-mocha";
       description = ''
-        Base16 color scheme name from the base16-schemes package.
-        Run: nix build nixpkgs#base16-schemes && ls result/share/themes/
-        to list available schemes. Popular choices:
-          gruvbox-dark-medium, catppuccin-mocha, tokyo-night-dark,
-          nord, dracula, rose-pine, everforest-dark-hard
+        nixpalette theme ID to activate.  Format:
+          "builtin:base/<name>"    — shipped with nixpalette
+          "builtin:derived/<name>" — derived builtin
+          "user:base/<name>"       — your own theme in assets/themes/base/
+          "user:derived/<name>"    — your own derived theme
+
+        Built-in themes: catppuccin-mocha, nord
+        Run `nix eval .#nixosConfigurations.laptop.config.nixpalette.availableThemes`
+        to list everything nixpalette can see.
       '';
     };
 
-    wallpaper = lib.mkOption {
+    userThemeDir = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       default = null;
       description = ''
-        Path to wallpaper image. Used by Stylix for desktop background
-        and as a color generation source (when no explicit scheme is set).
-        If null, a solid dark fallback wallpaper is generated.
-        Place custom wallpapers in assets/wallpapers/.
+        Absolute path to the directory containing your user themes.
+        Must have a base/ and/or derived/ subdirectory.
+        Example: set to `../../assets/themes` relative to configuration.nix,
+        or use an absolute path like /etc/nixos/assets/themes.
+        When null, only built-in themes are available.
       '';
     };
 
-    polarity = lib.mkOption {
-      type = lib.types.enum [ "dark" "light" "either" ];
-      default = "dark";
-      description = "Preferred color scheme polarity.";
+    specialisations = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = { };
+      description = ''
+        Map of specialisation name → theme ID.
+        Each entry generates a NixOS specialisation reachable from the
+        boot menu without a full rebuild.  Example:
+          specialisations = {
+            nord    = "builtin:base/nord";
+            gruvbox = "user:base/gruvbox";
+          };
+      '';
     };
   };
 
   config = lib.mkIf cfg.enable {
-    stylix = {
+    nixpalette = {
       enable = true;
-      autoEnable = true;
+      theme = cfg.theme;
+      userThemeDir = cfg.userThemeDir;
+      specialisations = cfg.specialisations;
 
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.scheme}.yaml";
-      polarity = cfg.polarity;
-
-      image =
-        if cfg.wallpaper != null
-        then cfg.wallpaper
-        else defaultWallpaper;
-
-      fonts = {
-        monospace = {
-          package = pkgs.nerd-fonts.jetbrains-mono;
+      # Override Stylix defaults so every theme (builtin or user) gets:
+      #   • JetBrainsMono Nerd Font for terminal icon support
+      #   • Bibata cursor
+      #   • Slight terminal transparency
+      # These sit above the per-theme mkDefault values, so they win
+      # regardless of what the theme.nix specifies for fonts.monospace.
+      stylixOverrides = {
+        fonts.monospace = {
           name = "JetBrainsMono Nerd Font";
+          package = pkgs.nerd-fonts.jetbrains-mono;
         };
-        sansSerif = {
-          package = pkgs.inter;
-          name = "Inter";
-        };
-        serif = {
-          package = pkgs.noto-fonts;
-          name = "Noto Serif";
-        };
-        emoji = {
-          package = pkgs.noto-fonts-emoji;
-          name = "Noto Color Emoji";
-        };
-        sizes = {
-          terminal = 13;
-          applications = 12;
-          desktop = 12;
-          popups = 12;
-        };
-      };
 
-      cursor = {
-        package = pkgs.bibata-cursors;
-        name = "Bibata-Modern-Classic";
-        size = 24;
-      };
+        cursor = {
+          package = pkgs.bibata-cursors;
+          name = "Bibata-Modern-Classic";
+          size = 24;
+        };
 
-      opacity = {
-        terminal = 0.95;
-        applications = 1.0;
-        desktop = 1.0;
-        popups = 1.0;
+        opacity = {
+          terminal = 0.95;
+          applications = 1.0;
+          desktop = 1.0;
+          popups = 1.0;
+        };
       };
     };
 
-    # Install Nerd Fonts system-wide
-    fonts.packages = [
-      pkgs.nerd-fonts.jetbrains-mono
-    ];
+    # Nerd Font available system-wide (e.g. for rofi, waybar, etc.)
+    fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
   };
 }
