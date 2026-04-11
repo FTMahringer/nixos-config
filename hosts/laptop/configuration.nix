@@ -43,7 +43,7 @@
   # 2. Copy public key to secrets/.sops.yaml
   # 3. Create secrets/secrets.yaml and encrypt with: sops secrets/secrets.yaml
   # 4. Uncomment below:
-  # ft.security.sops.enable = true;
+  ft.security.sops.enable = true;
 
   # --- OPTIONAL: Impermanence (ephemeral root) ---
   # WARNING: This requires a separate "persist" partition!

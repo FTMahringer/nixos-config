@@ -15,28 +15,25 @@ in
       description = "Path to the age private key for decrypting secrets.";
     };
 
-    defaultSopsFile = lib.mkOption {
-      type = lib.types.str;
-      default = "./secrets/secrets.yaml";
-      description = "Default sops file to use.";
+    secretsFile = lib.mkOption {
+      type = lib.types.path;
+      default = ../secrets/secrets.yaml;
+      description = "Path to the encrypted SOPS secrets file.";
     };
   };
 
   config = lib.mkIf cfg.enable {
     sops = {
-      # Age private key for decryption
       age.keyFile = cfg.ageKeyFile;
 
-      # Default secrets file
-      defaultSopsFile = cfg.defaultSopsFile;
+      defaultSopsFile = cfg.secretsFile;
 
-      # Example secrets (uncomment and modify as needed)
-      # secrets.ssh_private_key = {
-      #   owner = config.users.users.fynn.name;
-      #   group = config.users.users.fynn.group;
-      #   mode = "0600";
-      #   path = "/home/fynn/.ssh/id_ed25519";
-      # };
+      #secrets.ssh_private_key = {
+      #  owner = config.users.users.fynn.name;
+      #  group = config.users.users.fynn.group;
+      #  mode = "0600";
+      #  path = "/home/fynn/.ssh/id_ed25519";
+      #};
 
       # secrets."passwords/fynn" = {
       #   neededForUsers = true;
