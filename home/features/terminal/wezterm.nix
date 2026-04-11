@@ -28,10 +28,13 @@ lib.mkIf cfg.wezterm.enable {
   programs.wezterm = {
     enable = true;
 
-    # Stylix auto-generates the full wezterm.lua and wraps extraConfig
-    # in a function. We must RETURN a table — not use config_builder().
-    # Stylix handles: color_scheme, font, font_size, window_background_opacity,
-    #                 window_frame colors, tab bar colors, command palette colors.
+    # nixpalette → Stylix auto-manages WezTerm colors/fonts/opacity.
+    # Stylix wraps extraConfig in a Lua function and merges it with:
+    #   color_scheme           → generated base16 scheme from active nixpalette theme
+    #   font + font_size       → from theme fonts.monospace (Nerd Font override applied)
+    #   window_background_opacity → from ft.theming stylixOverrides.opacity.terminal
+    #   window_frame / tab bar colors → derived from base16 palette
+    # extraConfig must RETURN a plain Lua table — do NOT use wezterm.config_builder().
 
     extraConfig = ''
       return {

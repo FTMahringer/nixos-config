@@ -8,8 +8,11 @@ lib.mkIf cfg.kitty.enable {
   programs.kitty = {
     enable = true;
 
-    # Stylix auto-sets: font, font_size, background_opacity, colors (via extraConfig include).
-    # Everything below is non-theme configuration.
+    # nixpalette → Stylix auto-manages all color/font/opacity settings for Kitty:
+    #   font family + size  → from active theme's fonts.monospace (Nerd Font override applied)
+    #   background_opacity  → from ft.theming stylixOverrides.opacity.terminal
+    #   terminal colors     → injected via tinted-kitty include in extraConfig
+    # Everything below is structural/behavioral config only.
 
     settings = {
       # --- Window ---

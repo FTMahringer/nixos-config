@@ -1,3 +1,9 @@
+{ config, ... }:
+
+let
+  # nixpalette → Stylix base16 colors — same palette as starship.nix.
+  c = config.lib.stylix.colors;
+in
 {
   home.sessionVariables = {
     EDITOR = "nvim";
@@ -16,6 +22,8 @@
     syntaxHighlighting = {
       enable = true;
       highlighters = [ "main" "brackets" ];
+      # Colors are managed by the Stylix zsh-syntax-highlighting target
+      # (auto-enabled via nixpalette → Stylix).
     };
     historySubstringSearch.enable = true;
 
@@ -33,14 +41,15 @@
 
     # --- Completion styling & keybindings ---
     initContent = ''
-      # Completion styling (Fish-like menu with colors)
+      # Completion colors — use nixpalette base16 hex values so they match
+      # the active theme regardless of what the terminal calls "yellow" etc.
       zstyle ':completion:*' menu select
       zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
       zstyle ':completion:*' list-colors "''${(s.:.)LS_COLORS}"
       zstyle ':completion:*' special-dirs true
-      zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
-      zstyle ':completion:*:messages' format '%F{purple}-- %d --%f'
-      zstyle ':completion:*:warnings' format '%F{red}-- no matches --%f'
+      zstyle ':completion:*:descriptions' format '%F{#${c.base0A}}-- %d --%f'  # yellow (base0A)
+      zstyle ':completion:*:messages'     format '%F{#${c.base0E}}-- %d --%f'  # purple (base0E)
+      zstyle ':completion:*:warnings'     format '%F{#${c.base08}}-- no matches --%f' # red (base08)
       zstyle ':completion:*' group-name ""
       zstyle ':completion:*' squeeze-slashes true
       zstyle ':completion:*' use-cache on

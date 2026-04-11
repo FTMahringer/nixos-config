@@ -53,5 +53,31 @@
   # null → Stylix auto-generates a wallpaper from the base16 palette.
   wallpaper = null;
 
-  overrides = {};
+  # overrides.terminal: semantic color-role mapping for terminal emulators
+  # and the shell prompt.  Keys name the role; values are the base16 slot
+  # used for that role in this theme.
+  #
+  # starship.nix and zsh.nix read config.lib.stylix.colors directly using
+  # these same base16 keys, so the mapping below serves as the canonical
+  # documentation — and as a future nixpalette hook if the framework adds
+  # terminal-config generation.
+  #
+  # The same keys apply to any base16 theme; only the hex values differ.
+  overrides = {
+    terminal = {
+      # Shell prompt
+      promptOk       = "base0B"; # success character  → green   (#b8bb26)
+      promptError    = "base08"; # error character    → red     (#fb4934)
+      promptDir      = "base0D"; # directory path     → blue    (#83a598)
+      promptBranch   = "base09"; # git branch         → orange  (#fe8019)
+      promptGitDirty = "base08"; # git dirty/status   → red     (#fb4934)
+      promptShell    = "base0E"; # nix-shell marker   → purple  (#d3869b)
+      promptDuration = "base0A"; # command duration   → yellow  (#fabd2f)
+
+      # ZSH completion menu
+      completionDesc = "base0A"; # category headers   → yellow  (#fabd2f)
+      completionMsg  = "base0E"; # info messages      → purple  (#d3869b)
+      completionWarn = "base08"; # warning / no match → red     (#fb4934)
+    };
+  };
 }
