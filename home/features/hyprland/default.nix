@@ -4,6 +4,7 @@
   imports = [
     ./hyprland.nix
     ./waybar.nix
+    ./quickshell.nix
     ./rofi.nix
     ./mako.nix
     ./hyprlock.nix
@@ -12,6 +13,16 @@
 
   options.ft.desktop.hyprland = {
     enable = lib.mkEnableOption "Hyprland desktop environment (home-manager)";
+
+    bar = lib.mkOption {
+      type = lib.types.enum [ "waybar" "quickshell" ];
+      default = "waybar";
+      description = ''
+        Bar/shell to use with Hyprland.
+          "waybar"     — the classic Waybar status bar (default)
+          "quickshell" — caelestia-dots/shell built on Quickshell
+      '';
+    };
 
     monitor = lib.mkOption {
       type = lib.types.str;

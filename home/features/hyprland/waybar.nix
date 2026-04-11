@@ -1,6 +1,6 @@
 { config, lib, ... }:
 
-lib.mkIf config.ft.desktop.hyprland.enable {
+lib.mkIf (config.ft.desktop.hyprland.enable && config.ft.desktop.hyprland.bar == "waybar") {
 
   programs.waybar = {
     enable = true;
