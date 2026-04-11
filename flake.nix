@@ -38,6 +38,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Unified theming (base16 colors, fonts, cursor, opacity)
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Secrets management
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -59,6 +65,7 @@
         modules = [
           ./hosts/laptop/configuration.nix
           home-manager.nixosModules.home-manager
+          inputs.stylix.nixosModules.stylix
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
           }

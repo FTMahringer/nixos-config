@@ -20,6 +20,12 @@
   ft.programs.git.enable = true;
   ft.programs.zsh.enable = true;
 
+  # Theming (Stylix) — change scheme here to retheme everything
+  ft.theming.enable = true;
+  # ft.theming.scheme = "catppuccin-mocha";   # override default (gruvbox-dark-medium)
+  # ft.theming.polarity = "dark";
+  # ft.theming.wallpaper = ../../assets/wallpapers/my-wallpaper.png;
+
   # --- OPTIONAL: Secrets Management (sops-nix) ---
   # 1. Generate age key: mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/keys.txt
   # 2. Copy public key to secrets/.sops.yaml

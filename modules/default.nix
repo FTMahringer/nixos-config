@@ -4,5 +4,6 @@
     ./programs
     ./security
     ./system
+    ./theming
   ];
 }
