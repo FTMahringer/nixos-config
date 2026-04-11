@@ -23,6 +23,8 @@ in
       # fetching flake inputs from GitHub and other HTTPS sources.
       openssl
       cacert
+      # Age encryption — used by sops-nix to encrypt/decrypt secrets
+      age
     ];
   };
 }
