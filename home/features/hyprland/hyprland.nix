@@ -246,12 +246,12 @@ lib.mkIf cfg.enable {
       # windowrulev2 was deprecated; new syntax uses windowrule with match: props
       windowrule = [
         "suppress_event maximize, match:class .*"
-        "float, match:class nm-connection-editor"
-        "float, match:class pavucontrol"
-        "float, match:class blueman-manager"
-        "float, match:title Picture-in-Picture"
-        "pin,   match:title Picture-in-Picture"
-        "float, match:class org.gnome.Nautilus, match:title Properties"
+        "float on, match:class nm-connection-editor"
+        "float on, match:class pavucontrol"
+        "float on, match:class blueman-manager"
+        "float on, match:title Picture-in-Picture"
+        "pin on, match:title Picture-in-Picture"
+        "float on, match:class org.gnome.Nautilus, match:title Properties"
       ];
     };
   };
