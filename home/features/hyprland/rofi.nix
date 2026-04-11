@@ -5,7 +5,7 @@ lib.mkIf config.ft.desktop.hyprland.enable {
   programs.rofi = {
     enable = true;
     # rofi-wayland is the Wayland-native fork; required for Hyprland
-    package = pkgs.rofi-wayland;
+    package = pkgs.rofi;
 
     # Stylix handles all color theming via stylix.targets.rofi.
     # We only configure layout and behavior here.
