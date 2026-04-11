@@ -17,7 +17,7 @@ in
 
     secretsFile = lib.mkOption {
       type = lib.types.path;
-      default = ../secrets/secrets.yaml;
+      default = ../../secrets/secrets.yaml;
       description = "Path to the encrypted SOPS secrets file.";
     };
   };
@@ -28,12 +28,12 @@ in
 
       defaultSopsFile = cfg.secretsFile;
 
-      #secrets.ssh_private_key = {
-      #  owner = config.users.users.fynn.name;
-      #  group = config.users.users.fynn.group;
-      #  mode = "0600";
-      #  path = "/home/fynn/.ssh/id_ed25519";
-      #};
+      secrets.ssh_private_key = {
+        owner = config.users.users.fynn.name;
+        group = config.users.users.fynn.group;
+        mode = "0600";
+        path = "/home/fynn/.ssh/id_ed25519";
+      };
 
       # secrets."passwords/fynn" = {
       #   neededForUsers = true;
