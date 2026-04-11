@@ -5,12 +5,11 @@ lib.mkIf config.ft.desktop.hyprland.enable {
   services.mako = {
     enable = true;
 
-    # Stylix handles all colors via stylix.targets.mako.
+    # Stylix handles colors AND font via stylix.targets.mako automatically.
     # We configure layout and behavior only.
     anchor = "top-right";
     sort = "-time";
     defaultTimeout = 5000; # ms — auto-dismiss after 5 s
-    font = "JetBrainsMono Nerd Font 11";
     maxVisible = 5;
 
     # Options not exposed as direct HM attrs
