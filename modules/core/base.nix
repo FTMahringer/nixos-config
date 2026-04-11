@@ -3,6 +3,11 @@
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Point the Nix daemon at the system CA certificate bundle.
+  # Without this, `nix build` / `nix flake update` can fail with
+  # SSL_R_TLSV1_UNRECOGNIZED_NAME when fetching inputs from GitHub.
+  nix.settings.ssl-cert-file = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 

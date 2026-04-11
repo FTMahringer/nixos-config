@@ -19,6 +19,10 @@ in
       htop
       tree
       fastfetch
+      # SSL tooling — needed so the Nix daemon can verify TLS when
+      # fetching flake inputs from GitHub and other HTTPS sources.
+      openssl
+      cacert
     ];
   };
 }
