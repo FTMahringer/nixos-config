@@ -6,9 +6,9 @@
   imports = [ inputs.caelestia-shell.homeManagerModules.default ];
 
   config = lib.mkIf (config.ft.desktop.hyprland.enable && config.ft.desktop.hyprland.bar == "quickshell") {
-    programs.caelestia-shell = {
+    programs.caelestia = {
       enable = true;
-      enableCli = true;
+      cli.enable = true;
     };
   };
 }
