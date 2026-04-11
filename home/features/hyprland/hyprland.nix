@@ -1,7 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 let
   cfg = config.ft.desktop.hyprland;
+  hyprlandPkg = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
 in
 lib.mkIf cfg.enable {
 
@@ -14,6 +15,7 @@ lib.mkIf cfg.enable {
 
   wayland.windowManager.hyprland = {
     enable = true;
+    package = hyprlandPkg;
     xwayland.enable = true;
     # Integrate Hyprland with systemd so that graphical-session.target starts,
     # which in turn starts waybar, mako, hypridle, and hyprpaper services.

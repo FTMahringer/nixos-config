@@ -1,7 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 let
   cfg = config.ft.programs.hyprland;
+  hyprlandPkg = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+  hyprlandPortal = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
 in
 {
   options.ft.programs.hyprland = {
@@ -11,6 +13,8 @@ in
   config = lib.mkIf cfg.enable {
     programs.hyprland = {
       enable = true;
+      package = hyprlandPkg;
+      portalPackage = hyprlandPortal;
       xwayland.enable = true;
     };
 
@@ -35,7 +39,7 @@ in
     security.polkit.enable = true;
 
     # Login manager: greetd + tuigreet (minimal TUI greeter)
-    # Use pkgs.hyprland directly — its share/wayland-sessions contains hyprland.desktop.
+    # Session file comes from the flake's Hyprland package directly.
     services.greetd = {
       enable = true;
       #vt = 1;
@@ -44,7 +48,7 @@ in
           ${pkgs.tuigreet}/bin/tuigreet \
             --time \
             --remember \
-            --sessions ${pkgs.hyprland}/share/wayland-sessions
+            --sessions ${hyprlandPkg}/share/wayland-sessions
         '';
         user = "greeter";
       };
