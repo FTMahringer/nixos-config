@@ -38,6 +38,22 @@ in
     # Polkit — required for privilege escalation in Wayland sessions
     security.polkit.enable = true;
 
+    # Override hyprlock PAM service — remove try_first_pass so pam_unix waits
+    # for actual user input instead of immediately trying a null token and
+    # triggering pam_deny → "authentication failed (1)" on startup.
+    security.pam.services.hyprlock.text = lib.mkForce ''
+      auth      sufficient  pam_unix.so likeauth
+      auth      required    pam_deny.so
+
+      account   required    pam_unix.so
+
+      password  sufficient  pam_unix.so nullok yescrypt
+
+      session   required    pam_env.so readenv=0
+      session   required    pam_unix.so
+      session   required    pam_limits.so
+    '';
+
     # Login manager: greetd + tuigreet (minimal TUI greeter)
     # Session file comes from the flake's Hyprland package directly.
     services.greetd = {

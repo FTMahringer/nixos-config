@@ -16,7 +16,7 @@ lib.mkIf config.ft.desktop.hyprland.enable {
         general = {
           disable_loading_bar = false;
           hide_cursor = true;
-          grace = 2;
+          grace = 0;
           no_fade_in = false;
         };
 
