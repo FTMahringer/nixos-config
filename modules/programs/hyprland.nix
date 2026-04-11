@@ -42,7 +42,7 @@ in
     # for actual user input instead of immediately trying a null token and
     # triggering pam_deny → "authentication failed (1)" on startup.
     security.pam.services.hyprlock.text = lib.mkForce ''
-      auth      sufficient  pam_unix.so likeauth
+      auth      sufficient  pam_unix.so likeauth nullok nodelay
       auth      required    pam_deny.so
 
       account   required    pam_unix.so
