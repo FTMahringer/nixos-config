@@ -24,7 +24,7 @@ lib.mkIf cfg.enable {
 
       "$mod" = "SUPER";
       "$terminal" = cfg.terminal;
-      "$fileManager" = "nautilus";
+      "$fileManager" = "${cfg.terminal} -e yazi";
       "$menu" = "rofi -show drun";
 
       # ── Startup ─────────────────────────────────────────────────────────────
@@ -120,9 +120,12 @@ lib.mkIf cfg.enable {
       };
 
       gestures = {
-        workspace_swipe = true;
-        workspace_swipe_fingers = 3;
+        # workspace_swipe / workspace_swipe_fingers were removed; use gesture keyword instead
+        workspace_swipe_invert = true;
       };
+
+      # 3-finger horizontal swipe → switch workspace (replaces removed workspace_swipe)
+      gesture = [ "3, horizontal, workspace" ];
 
       # ── Misc ────────────────────────────────────────────────────────────────
       misc = {
@@ -234,15 +237,21 @@ lib.mkIf cfg.enable {
         "$mod, mouse:273, resizewindow"
       ];
 
+      # Cursor: disable hardware cursors to fix cursor vanishing on hover
+      cursor = {
+        no_hardware_cursors = true;
+      };
+
       # ── Window rules ────────────────────────────────────────────────────────
-      windowrulev2 = [
-        "suppressevent maximize, class:.*"
-        "float, class:^(nm-connection-editor)$"
-        "float, class:^(pavucontrol)$"
-        "float, class:^(blueman-manager)$"
-        "float, title:^(Picture-in-Picture)$"
-        "pin,   title:^(Picture-in-Picture)$"
-        "float, class:^(org.gnome.Nautilus)$, title:^(Properties)$"
+      # windowrulev2 was deprecated; new syntax uses windowrule with match: props
+      windowrule = [
+        "suppress_event maximize, match:class .*"
+        "float, match:class nm-connection-editor"
+        "float, match:class pavucontrol"
+        "float, match:class blueman-manager"
+        "float, match:title Picture-in-Picture"
+        "pin,   match:title Picture-in-Picture"
+        "float, match:class org.gnome.Nautilus, match:title Properties"
       ];
     };
   };
