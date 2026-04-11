@@ -9,7 +9,7 @@ lib.mkIf config.ft.desktop.hyprland.enable {
     # (wayland.windowManager.hyprland.systemd.enable = true triggers it).
     systemd = {
       enable = true;
-      target = "hyprland-session.target";
+      targets = [ "hyprland-session.target" ];
     };
 
     settings = [
