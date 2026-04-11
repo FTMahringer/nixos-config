@@ -35,7 +35,7 @@ in
     security.polkit.enable = true;
 
     # Login manager: greetd + tuigreet (minimal TUI greeter)
-    # Point --sessions to the Nix store path so hyprland.desktop is always found.
+    # Use pkgs.hyprland directly — its share/wayland-sessions contains hyprland.desktop.
     services.greetd = {
       enable = true;
       #vt = 1;
@@ -44,8 +44,7 @@ in
           ${pkgs.tuigreet}/bin/tuigreet \
             --time \
             --remember \
-            --remember-session \
-            --sessions ${config.programs.hyprland.finalPackage}/share/wayland-sessions
+            --sessions ${pkgs.hyprland}/share/wayland-sessions
         '';
         user = "greeter";
       };
