@@ -35,17 +35,17 @@ in
     security.polkit.enable = true;
 
     # Login manager: greetd + tuigreet (minimal TUI greeter)
-    # Use --sessions to discover the Hyprland .desktop session file that
-    # programs.hyprland places under /run/current-system/sw/share/wayland-sessions.
+    # Point --sessions to the Nix store path so hyprland.desktop is always found.
     services.greetd = {
       enable = true;
+      #vt = 1;
       settings.default_session = {
         command = ''
           ${pkgs.tuigreet}/bin/tuigreet \
             --time \
             --remember \
             --remember-session \
-            --sessions /run/current-system/sw/share/wayland-sessions
+            --sessions ${config.programs.hyprland.finalPackage}/share/wayland-sessions
         '';
         user = "greeter";
       };
