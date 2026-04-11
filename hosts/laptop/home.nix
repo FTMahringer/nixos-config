@@ -8,6 +8,12 @@
   home-manager.users.fynn = {
     imports = [ ../../home ];
 
+    # Hyprland desktop environment
+    ft.desktop.hyprland.enable = true;
+    # Monitor config — adjust to your display.  Default = auto-detect, no scaling.
+    # Example for a 4K display at 2× scale: "eDP-1,3840x2160@60,0x0,2"
+    # ft.desktop.hyprland.monitor = ",preferred,auto,1.5";
+
     # Enable terminal emulators (toggle on/off here)
     ft.terminal.kitty.enable = true;
     ft.terminal.wezterm.enable = true;

@@ -20,6 +20,9 @@
   ft.programs.git.enable = true;
   ft.programs.zsh.enable = true;
 
+  # Hyprland Wayland compositor (enables greetd, pipewire, polkit, portals)
+  ft.programs.hyprland.enable = true;
+
   # Theming (nixpalette → Stylix) — change theme here to retheme everything.
   # Theme IDs:  "builtin:base/<name>"  |  "user:base/<name>"  |  "user:derived/<name>"
   # Built-ins: catppuccin-mocha, nord

@@ -14,6 +14,11 @@
   #   starship                 → palette.stylix defined (we use #hex directly)
   #   yazi                     → theme.toml generated from base16
   #   gtk                      → GTK3 theme + icon theme
+  #   hyprland                 → col.active_border, col.inactive_border, shadow color
+  #   waybar                   → full base16 palette as @define-color CSS variables
+  #   rofi                     → colors.rasi injected into rofi config
+  #   mako                     → background/text/border/progress colors
+  #   hyprpaper                → wallpaper set from stylix.image (or generated from base00)
   #
   # DISABLED (app manages its own theme):
   #   neovim / vim / nvf → NVF manages Neovim theming independently.
@@ -23,11 +28,16 @@
   #     To switch Neovim to Stylix/base16 theming instead:
   #       1. Set all three targets to true
   #       2. Remove the `vim.theme` block from settings.nix
+  #
+  #   hyprlock → We provide our own layout (blurred screenshot background,
+  #     clock labels) in home/features/hyprland/hyprlock.nix and reference
+  #     config.lib.stylix.colors directly for a fully custom look.
 
   stylix.targets = {
     neovim.enable = false;
     vim.enable    = false;
     nvf.enable    = false; # ← Stylix's dedicated NVF target (separate from neovim)
+    hyprlock.enable = false; # ← We own hyprlock config in home/features/hyprland/hyprlock.nix
   };
 
   # GTK4 — HM 26.05 changed the default of gtk.gtk4.theme from
