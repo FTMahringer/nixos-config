@@ -51,6 +51,7 @@
 
     nixpalette = {
       url = "github:FTMahringer/nixpalette";
+      #url = "path:/home/fynn/nixos-flakes/nixpalette";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
