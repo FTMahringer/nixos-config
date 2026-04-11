@@ -11,7 +11,7 @@
     # Hyprland desktop environment
     ft.desktop.hyprland.enable = true;
     # Bar selection: "waybar" (default) or "quickshell" (caelestia-dots/shell)
-    # ft.desktop.hyprland.bar = "quickshell";
+    ft.desktop.hyprland.bar = "quickshell";
     # Monitor config — adjust to your display.  Default = auto-detect, no scaling.
     # Example for a 4K display at 2× scale: "eDP-1,3840x2160@60,0x0,2"
     # ft.desktop.hyprland.monitor = ",preferred,auto,1.5";
