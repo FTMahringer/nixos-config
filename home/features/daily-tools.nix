@@ -198,12 +198,11 @@ in
   '';
 
   # --- btop configuration ---
-  # Note: btop uses its own theme files, but we can set it to match
-  # The "default" theme will use terminal colors (which are set by nixpalette/stylix)
+  # Note: btop theme is already handled by nixpalette/stylix (sets "stylix" theme)
+  # We just enable additional settings here
   programs.btop = {
     enable = true;
     settings = {
-      color_theme = "default";  # Uses terminal colors (set by nixpalette/stylix)
       theme_background = false;
       vim_keys = true;
       rounded_corners = true;

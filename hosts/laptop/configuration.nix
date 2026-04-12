@@ -57,5 +57,19 @@
   #   "/var/lib/bluetooth"    # Bluetooth pairings
   # ];
 
+  # --- Automatic NixOS Generation Cleanup ---
+  # Delete generations older than 7 days to keep boot menu clean and save disk space
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
+  # Also optimize the nix store (deduplicate) weekly
+  nix.optimise = {
+    automatic = true;
+    dates = [ "weekly" ];
+  };
+
   system.stateVersion = "25.11";
 }
