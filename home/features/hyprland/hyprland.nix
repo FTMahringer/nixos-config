@@ -131,8 +131,8 @@ lib.mkIf cfg.enable {
 
       # ── Ecosystem ───────────────────────────────────────────────────────────
       ecosystem = {
-          no_donation_nag = true
-          no_update_news = true
+          no_donation_nag = true;
+          no_update_news = true;
       }
 
       # ── Misc ────────────────────────────────────────────────────────────────
