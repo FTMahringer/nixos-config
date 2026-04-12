@@ -53,8 +53,18 @@ in
   stylix.targets.firefox.profileNames = [ "default" ];
 
   # --- Zed Editor Configuration ---
-  # Copy user's settings.json and add nixpalette theme overrides via separate file
-  xdg.configFile."zed/settings.json".source = ./settings/zed-settings.json;
+  # Initial Zed settings - copied once and then left writable
+  # This allows Zed to modify its own settings (themes, etc.) at runtime
+  home.activation.zedSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # Create Zed config directory if it doesn't exist
+    mkdir -p "$HOME/.config/zed"
+
+    # Copy settings.json only if it doesn't exist (preserves user changes)
+    if [ ! -f "$HOME/.config/zed/settings.json" ]; then
+      cp ${./settings/zed-settings.json} "$HOME/.config/zed/settings.json"
+      chmod 644 "$HOME/.config/zed/settings.json"
+    fi
+  '';
 
   # Zed theme overrides with nixpalette colors (placed in themes directory)
   xdg.configFile."zed/themes/nixpalette.json".text = ''
