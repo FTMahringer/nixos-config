@@ -48,6 +48,22 @@ in
           };
       '';
     };
+
+    preloadThemes = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = ''
+        Additional theme IDs to bake into /etc/nixpalette/themes.json at
+        build time.  The active theme is always included automatically.
+        The nixpalette-switch script reads this file to enable live theme
+        switching without a NixOS rebuild.
+        Example:
+          preloadThemes = [
+            "builtin:base/nord"
+            "builtin:base/catppuccin-latte"
+          ];
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -56,6 +72,7 @@ in
       theme = cfg.theme;
       userThemeDir = cfg.userThemeDir;
       specialisations = cfg.specialisations;
+      preloadThemes = cfg.preloadThemes;
 
       # Override Stylix defaults so every theme (builtin or user) gets:
       #   • JetBrainsMono Nerd Font for terminal icon support

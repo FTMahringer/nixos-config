@@ -1,5 +1,18 @@
 { config, ... }:
 {
+  # ── nixpalette-hyprland (Hyprland-specific theming) ──────────────────────
+  #
+  # The nixpalette-hyprland HM module provides:
+  #   hyprlock  — auto-generated lockscreen config (we use our own layout)
+  #   waybar    — injects colors.css with @define-color for all base16 slots
+  #   rofi/wofi — generates themed launcher configs
+  #   switcher  — adds nixpalette-switch script for live theme switching
+  #   swww      — animated wallpaper daemon (NixOS-side systemd service)
+  nixpalette-hyprland = {
+    hyprlock.enable = false; # we own hyprlock in home/features/hyprland/hyprlock.nix
+    waybar.enable   = true;  # generate ~/.config/waybar/colors.css
+  };
+
   # Home-manager Stylix target overrides.
   #
   # nixpalette → Stylix (autoEnable = true) themes every supported HM app
@@ -18,9 +31,11 @@
   #   waybar                   → full base16 palette as @define-color CSS variables
   #   rofi                     → colors.rasi injected into rofi config
   #   mako                     → background/text/border/progress colors
-  #   hyprpaper                → wallpaper set from stylix.image (or generated from base00)
   #
-  # DISABLED (app manages its own theme):
+  # DISABLED (managed elsewhere):
+  #   hyprpaper → swww (from nixpalette-hyprland) handles animated wallpaper;
+  #     the swww systemd user service is configured at the NixOS level.
+  #
   #   neovim / vim / nvf → NVF manages Neovim theming independently.
   #     Stylix has three separate neovim targets (neovim.nix, vim.nix, nvf.nix).
   #     All three must be disabled or NVF's vim.theme.name conflicts with
@@ -34,10 +49,11 @@
   #     config.lib.stylix.colors directly for a fully custom look.
 
   stylix.targets = {
-    neovim.enable = false;
-    vim.enable    = false;
-    nvf.enable    = false; # ← Stylix's dedicated NVF target (separate from neovim)
-    hyprlock.enable = false; # ← We own hyprlock config in home/features/hyprland/hyprlock.nix
+    neovim.enable   = false;
+    vim.enable      = false;
+    nvf.enable      = false;    # ← Stylix's dedicated NVF target (separate from neovim)
+    hyprlock.enable = false;    # ← we own hyprlock in home/features/hyprland/hyprlock.nix
+    hyprpaper.enable = false;   # ← swww (nixpalette-hyprland) handles wallpaper
   };
 
   # GTK4 — HM 26.05 changed the default of gtk.gtk4.theme from
