@@ -41,4 +41,4 @@ M.delete = function()
   )
 end
 
-return M
+package.loaded["nvim-tree-delete"] = M

@@ -65,4 +65,4 @@ M.create = function()
   )
 end
 
-return M
+package.loaded["new-item"] = M

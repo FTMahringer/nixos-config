@@ -164,11 +164,9 @@
 
           -- Load new-item module
           ${builtins.readFile ./lua/new-item.lua}
-          package.loaded["new-item"] = M
 
           -- Load nvim-tree-delete module
           ${builtins.readFile ./lua/nvim-tree-delete.lua}
-          package.loaded["nvim-tree-delete"] = M
         '';
 
         luaConfigPost = ''
