@@ -16,7 +16,7 @@
   users.users.fynn = {
     isNormalUser = true;
     description = "Fynn";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ "wheel" "networkmanager" "docker" ];
   };
 
   # Enable core programs
@@ -73,7 +73,6 @@
 
   # --- Docker ---
   virtualisation.docker.enable = true;
-  users.users.fynn.extraGroups = [ "wheel" "networkmanager" "docker" ];
 
   system.stateVersion = "25.11";
 }
