@@ -129,6 +129,12 @@ lib.mkIf cfg.enable {
       # 3-finger horizontal swipe → switch workspace (replaces removed workspace_swipe)
       gesture = [ "3, horizontal, workspace" ];
 
+      # ── Ecosystem ───────────────────────────────────────────────────────────
+      ecosystem = {
+          no_donation_nag = true
+          no_update_news = true
+      }
+
       # ── Misc ────────────────────────────────────────────────────────────────
       misc = {
         force_default_wallpaper = 0;
@@ -150,9 +156,10 @@ lib.mkIf cfg.enable {
         "$mod,       Q, killactive"
         "$mod SHIFT, Q, exit"
         "$mod,       F, fullscreen"
+
         "$mod,       V, togglefloating"
         "$mod,       P, pseudo"
-        "$mod,       J, togglesplit"
+        "$mod,       J, layoutmsg, togglesplit"
 
         # Focus movement (vim-style)
         "$mod, h, movefocus, l"
