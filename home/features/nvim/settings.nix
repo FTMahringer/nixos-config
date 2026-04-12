@@ -12,7 +12,7 @@
         vimAlias = true;
 
         # Expose the lua/ directory next to this file so `require('new-item')` works.
-        additionalRuntimePaths = [ ./lua ];
+        additionalRuntimePaths = [ "${./lua}" ];
 
         options = {
           number = true;
@@ -217,6 +217,23 @@
             pattern = "NvimTree",
             callback = function()
               vim.api.nvim_win_set_width(0, 30)
+            end,
+          })
+
+          -- When opening a file from NvimTree, resize it to 30 cols
+          -- This ensures the split is 25:75 (30 cols vs remaining)
+          vim.api.nvim_create_autocmd("BufWinEnter", {
+            callback = function()
+              local tree_wins = {}
+              for _, win in ipairs(vim.api.nvim_list_wins()) do
+                local buf = vim.api.nvim_win_get_buf(win)
+                if vim.bo[buf].filetype == "NvimTree" then
+                  table.insert(tree_wins, win)
+                end
+              end
+              for _, win in ipairs(tree_wins) do
+                vim.api.nvim_win_set_width(win, 30)
+              end
             end,
           })
         '';
