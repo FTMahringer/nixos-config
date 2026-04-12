@@ -45,13 +45,11 @@
   #   hyprpaper → swww (from nixpalette-hyprland) handles animated wallpaper;
   #     the swww systemd user service is configured at the NixOS level.
   #
-  #   neovim / vim / nvf → NVF manages Neovim theming independently.
-  #     Stylix has three separate neovim targets (neovim.nix, vim.nix, nvf.nix).
-  #     All three must be disabled or NVF's vim.theme.name conflicts with
-  #     the "gruvbox" theme set in home/features/nvim/settings.nix.
-  #     To switch Neovim to Stylix/base16 theming instead:
-  #       1. Set all three targets to true
-  #       2. Remove the `vim.theme` block from settings.nix
+  #   neovim / vim → not used (we use nvf, not programs.neovim/vim).
+  #
+  #   nvf → Stylix's dedicated NVF target auto-generates a base16 colorscheme
+  #     from the active nixpalette theme, so Neovim always matches the rest
+  #     of the desktop.  The `vim.theme` block must not be set in settings.nix.
   #
   #   hyprlock → We provide our own layout (blurred screenshot background,
   #     clock labels) in home/features/hyprland/hyprlock.nix and reference
@@ -60,7 +58,7 @@
   stylix.targets = {
     neovim.enable   = false;
     vim.enable      = false;
-    nvf.enable      = false;    # ← Stylix's dedicated NVF target (separate from neovim)
+    nvf.enable      = true;     # ← Stylix themes Neovim via nvf using nixpalette colors
     hyprlock.enable = false;    # ← we own hyprlock in home/features/hyprland/hyprlock.nix
     hyprpaper.enable = lib.mkForce false;   # ← swww (nixpalette-hyprland) handles wallpaper
   };
