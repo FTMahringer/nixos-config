@@ -60,7 +60,6 @@
             view = {
               width = 30;
               side = "left";
-              preserve_window_proportions = true;
             };
             renderer = {
               group_empty = true;
@@ -210,6 +209,14 @@
               vim.keymap.set("n", "<C-n>", function()
                 require("new-item").create()
               end, { buffer = args.buf, noremap = true, silent = true, desc = "New file/folder" })
+            end,
+          })
+
+          -- Force the NvimTree window to 30 cols whenever it appears
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = "NvimTree",
+            callback = function()
+              vim.api.nvim_win_set_width(0, 30)
             end,
           })
         '';
