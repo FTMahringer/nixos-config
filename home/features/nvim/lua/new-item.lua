@@ -10,7 +10,8 @@ local function create_file(parent_path, api)
     vim.fn.mkdir(dir, "p")
     vim.fn.writefile({}, full_path)
     api.tree.reload()
-    vim.cmd("edit " .. vim.fn.fnameescape(full_path))
+    -- Open in a vertical split on the right side (not full screen)
+    vim.cmd("vsplit " .. vim.fn.fnameescape(full_path))
   end)
 end
 
