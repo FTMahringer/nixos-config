@@ -52,7 +52,7 @@
               update_root = false;
             };
             view = {
-              width = 30;
+              width = 15;
               side = "left";
               preserve_window_proportions = true;
             };
