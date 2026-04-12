@@ -24,7 +24,9 @@
     [providers.kimi-for-coding]
     type = "kimi"
     base_url = "https://api.kimi.com/coding/v1"
-    # api_key is set via environment variable KIMI_API_KEY or via `/login` command
+    # NOTE: api_key must be set here or via KIMI_API_KEY environment variable
+    # Leave empty to use /login command (OAuth) - kimi will populate this after login
+    api_key = ""
 
     [models.kimi-for-coding]
     provider = "kimi-for-coding"
