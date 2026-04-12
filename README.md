@@ -234,7 +234,7 @@ Located in `home/features/nvim/`:
 
 ### `nvim` not found
 
-Ensure `inputs.nvf.homeManagerModules.default` is imported in your home config.
+Ensure `inputs.nvf.homeModules.default` is imported in your home config.
 
 ### Git "dubious ownership"
 
