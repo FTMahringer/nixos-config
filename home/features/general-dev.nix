@@ -67,7 +67,7 @@ in
   ];
 
   # --- Git Delta Configuration with nixpalette colors ---
-  programs.git.delta = {
+  programs.delta = {
     enable = true;
     options = {
       features = "line-numbers decorations";
