@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.nvf = {
@@ -10,6 +10,9 @@
       vim = {
         viAlias = true;
         vimAlias = true;
+
+        # Expose the lua/ directory next to this file so `require('new-item')` works.
+        additionalRuntimePaths = [ ./lua ];
 
         options = {
           number = true;
@@ -199,6 +202,16 @@
             local indent = vim.fn.matchstr(vim.fn.getline("."), "^%s*")
             return "<CR>" .. indent
           end, { expr = true, noremap = true })
+
+          -- Ctrl+N inside NvimTree → file/folder creation popup
+          vim.api.nvim_create_autocmd("FileType", {
+            pattern = "NvimTree",
+            callback = function(args)
+              vim.keymap.set("n", "<C-n>", function()
+                require("new-item").create()
+              end, { buffer = args.buf, noremap = true, silent = true, desc = "New file/folder" })
+            end,
+          })
         '';
       };
     };
