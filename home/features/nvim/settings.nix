@@ -270,7 +270,7 @@
               end, { buffer = args.buf, noremap = true, silent = true, desc = "Close terminal" })
 
               -- Escape to exit terminal insert mode
-              vim.keymap.set("t", "<Esc>", "<C-\><C-n>", { buffer = args.buf, noremap = true, silent = true })
+              vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { buffer = args.buf, noremap = true, silent = true })
             end,
           })
         '';
