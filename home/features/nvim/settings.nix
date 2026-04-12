@@ -144,7 +144,7 @@
           {
             key = "<C-x>";
             mode = [ "n" ];
-            action = "<cmd>bd<CR>";
+            action = "<cmd>q<CR>";
             silent = true;
           }
           {
@@ -199,21 +199,6 @@
             local indent = vim.fn.matchstr(vim.fn.getline("."), "^%s*")
             return "<CR>" .. indent
           end, { expr = true, noremap = true })
-
-          -- Quit nvim when NvimTree is the only window left
-          vim.api.nvim_create_autocmd("BufEnter", {
-            nested = true,
-            callback = function()
-              local wins = vim.api.nvim_list_wins()
-              if #wins == 1 then
-                local buf = vim.api.nvim_win_get_buf(wins[1])
-                local name = vim.api.nvim_buf_get_name(buf)
-                if name:match("NvimTree") then
-                  vim.cmd("quit")
-                end
-              end
-            end,
-          })
         '';
       };
     };
