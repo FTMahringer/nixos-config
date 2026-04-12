@@ -51,6 +51,9 @@ in
   ];
 
   # --- Browser Configuration ---
+  # Tell stylix which Firefox profile to theme
+  stylix.targets.firefox.profileNames = [ "default" ];
+
   # Firefox configuration via Home Manager
   programs.firefox = {
     enable = true;
