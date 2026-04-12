@@ -1,4 +1,4 @@
-{ ... }:
+{ config, pkgs, ... }:
 
 {
   imports =
@@ -7,6 +7,9 @@
       ./home.nix
       ../../modules
     ];
+
+  # Allow unfree packages (Obsidian, Spotify, etc.)
+  nixpkgs.config.allowUnfree = true;
 
   networking.hostName = "ft-nixos";
 
