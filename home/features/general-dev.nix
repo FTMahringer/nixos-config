@@ -72,7 +72,7 @@ in
     options = {
       features = "line-numbers decorations";
       syntax-theme = "base16";
-      line-numbers = true;
+      #line-numbers = true;
       # Use nixpalette colors
       plus-color = "#${c.base0B}";
       plus-emph-color = "#${c.base0B}";
