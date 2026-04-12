@@ -125,10 +125,9 @@ in
   };
 
   # --- Shell Aliases for Development ---
+  # Note: Docker aliases (d, dc, dps) are already defined in shell/zsh/aliases.nix
   programs.zsh.shellAliases = lib.mkIf config.programs.zsh.enable {
-    # Docker
-    d = "docker";
-    dc = "docker-compose";
+    # Docker (additional)
     ld = "lazydocker";
 
     # Node.js
@@ -145,8 +144,7 @@ in
     pnd = "pnpm add --save-dev";
     pnr = "pnpm run";
 
-    # Git with delta
-    gd = "git diff";
+    # Git with delta (additional to existing git aliases)
     gds = "git diff --staged";
 
     # HTTP requests
