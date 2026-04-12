@@ -75,22 +75,11 @@
   virtualisation.docker.enable = true;
 
   # --- XDG Desktop Portal ---
-  # Required for file opening, screen sharing, and other desktop integration
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
-    ];
-    config = {
-      common = {
-        default = [ "gtk" ];
-      };
-      hyprland = {
-        default = [ "gtk" "wlr" ];
-      };
-    };
-  };
+  # Note: Hyprland module already enables xdg.portal
+  # We just add the GTK portal for better app integration
+  xdg.portal.extraPortals = with pkgs; [
+    xdg-desktop-portal-gtk
+  ];
 
   system.stateVersion = "25.11";
 }
