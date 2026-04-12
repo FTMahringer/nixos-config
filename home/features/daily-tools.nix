@@ -35,7 +35,7 @@ in
     lazygit          # Terminal git UI
     zed-editor       # Modern Rust-based editor
     # Note: For JetBrains tools, use individual packages like:
-    jetbrains.idea-ultimate (or idea-community)
+    jetbrains.idea-ultimate #(or idea-community)
     # jetbrains.pycharm-community (or pycharm-professional)
     # jetbrains.webstorm
     # jetbrains.rust-rover
