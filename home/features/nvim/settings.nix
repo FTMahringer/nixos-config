@@ -11,8 +11,7 @@
         viAlias = true;
         vimAlias = true;
 
-        # Expose the lua/ directory next to this file so `require('new-item')` works.
-        additionalRuntimePaths = [ "${./lua}" ];
+
 
         options = {
           number = true;
@@ -166,6 +165,74 @@
           if vim.env.TERM ~= "linux" then
             vim.opt.termguicolors = true
           end
+
+          -- Embedded new-item module for file/folder creation in NvimTree
+          local new_item = {}
+
+          -- File creation module
+          local new_item_file = {}
+          new_item_file.create = function(parent_path, api)
+            vim.ui.input({ prompt = "  File name: " }, function(name)
+              if not name or name == "" then return end
+              local full_path = parent_path .. "/" .. name
+              local dir = vim.fn.fnamemodify(full_path, ":h")
+              vim.fn.mkdir(dir, "p")
+              vim.fn.writefile({}, full_path)
+              api.tree.reload()
+              vim.cmd("edit " .. vim.fn.fnameescape(full_path))
+            end)
+          end
+
+          -- Folder creation module
+          local new_item_folder = {}
+          new_item_folder.create = function(parent_path, api)
+            vim.ui.input({ prompt = "  Folder name: " }, function(name)
+              if not name or name == "" then return end
+              local full_path = parent_path .. "/" .. name
+              vim.fn.mkdir(full_path, "p")
+              api.tree.reload()
+            end)
+          end
+
+          -- Main module
+          local function get_parent_path(api)
+            local node = api.tree.get_node_under_cursor()
+            if not node or not node.absolute_path then return nil end
+            if node.fs_stat and node.fs_stat.type == "directory" then
+              return node.absolute_path
+            else
+              return vim.fn.fnamemodify(node.absolute_path, ":h")
+            end
+          end
+
+          new_item.create = function()
+            local ok, api = pcall(require, "nvim-tree.api")
+            if not ok then
+              vim.notify("nvim-tree is not available", vim.log.levels.ERROR)
+              return
+            end
+            local parent_path = get_parent_path(api)
+            if not parent_path then
+              vim.notify("Could not determine target directory", vim.log.levels.WARN)
+              return
+            end
+            local display = vim.fn.fnamemodify(parent_path, ":~")
+            vim.ui.select(
+              { "  File", "  Folder" },
+              { prompt = "New item in " .. display .. ":" },
+              function(choice)
+                if not choice then return end
+                if choice:match("File") then
+                  new_item_file.create(parent_path, api)
+                else
+                  new_item_folder.create(parent_path, api)
+                end
+              end
+            )
+          end
+
+          -- Register the module so require('new-item') works
+          package.loaded["new-item"] = new_item
         '';
 
         luaConfigPost = ''
