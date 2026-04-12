@@ -3,6 +3,20 @@
 let
   # nixpalette → Stylix base16 colors
   c = config.lib.stylix.colors;
+
+  # Wrapper for kimi to ensure it has proper environment
+  kimiWrapper = pkgs.writeShellScriptBin "kimi-zed" ''
+    # Ensure node and other tools are in PATH for Zed integration
+    export PATH="${pkgs.nodejs}/bin:$HOME/.npm-packages/bin:$PATH"
+    exec ${inputs.kimi-cli.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/kimi "$@"
+  '';
+
+  # Wrapper for opencode to ensure it has proper environment
+  opencodeWrapper = pkgs.writeShellScriptBin "opencode-zed" ''
+    # Ensure node and other tools are in PATH for Zed integration
+    export PATH="${pkgs.nodejs}/bin:$HOME/.npm-packages/bin:$PATH"
+    exec ${pkgs.opencode}/bin/opencode "$@"
+  '';
 in
 {
   # AI coding agents packages
@@ -12,7 +26,20 @@ in
 
     # OpenCode - from nixpkgs
     pkgs.opencode
+
+    # Wrappers for Zed integration
+    kimiWrapper
+    opencodeWrapper
   ];
+
+  # Ensure AI tools are available in PATH for GUI apps (like Zed)
+  # Zed spawns processes with a limited environment, so we need to ensure
+  # the tools are in a location that's always accessible
+  home.file.".local/bin/kimi".source = lib.mkForce "${inputs.kimi-cli.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/kimi";
+  home.file.".local/bin/opencode".source = lib.mkForce "${pkgs.opencode}/bin/opencode";
+
+  # Add ~/.local/bin to PATH
+  home.sessionPath = lib.mkBefore [ "$HOME/.local/bin" ];
 
   # Kimi CLI configuration with nixpalette colors
   # Config location: ~/.kimi/config.toml

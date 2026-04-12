@@ -122,6 +122,10 @@ in
     # Editor for git, etc.
     EDITOR = "nvim";
     VISUAL = "nvim";
+
+    # Ensure Node.js is in PATH for Zed and other GUI apps
+    # This is needed for AI tools (kimi, opencode) to work in Zed
+    PATH = "$HOME/.npm-packages/bin:$PATH";
   };
 
   # --- Shell Aliases for Development ---
