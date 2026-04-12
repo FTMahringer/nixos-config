@@ -127,7 +127,7 @@ in
     # --- Development Tools ---
     vscodium         # VS Code without Microsoft telemetry
     zed-editor       # Modern Rust-based editor
-    jetbrains.idea-community  # IntelliJ IDEA Community Edition
+    jetbrains.idea  # IntelliJ IDEA
     # Note: For other JetBrains tools, use individual packages like:
     # jetbrains.pycharm-community (or pycharm-professional)
     # jetbrains.webstorm
