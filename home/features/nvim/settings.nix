@@ -167,6 +167,9 @@
 
           -- Load nvim-tree-delete module
           ${builtins.readFile ./lua/nvim-tree-delete.lua}
+
+          -- Load nvim-tree-terminal module
+          ${builtins.readFile ./lua/nvim-tree-terminal.lua}
         '';
 
         luaConfigPost = ''
@@ -214,6 +217,16 @@
               vim.keymap.set("n", "<C-d>", function()
                 require("nvim-tree-delete").delete()
               end, { buffer = args.buf, noremap = true, silent = true, desc = "Delete file/folder" })
+
+              -- Ctrl+T to toggle/open terminal at bottom
+              vim.keymap.set("n", "<C-t>", function()
+                require("nvim-tree-terminal").toggle()
+              end, { buffer = args.buf, noremap = true, silent = true, desc = "Toggle terminal" })
+
+              -- Ctrl+Shift+T to close terminal
+              vim.keymap.set("n", "<C-S-t>", function()
+                require("nvim-tree-terminal").close()
+              end, { buffer = args.buf, noremap = true, silent = true, desc = "Close terminal" })
             end,
           })
 
@@ -239,6 +252,25 @@
               for _, win in ipairs(tree_wins) do
                 vim.api.nvim_win_set_width(win, 30)
               end
+            end,
+          })
+
+          -- Terminal buffer keymaps
+          vim.api.nvim_create_autocmd("TermOpen", {
+            pattern = "*",
+            callback = function(args)
+              -- Ctrl+T in terminal to go back to file tree
+              vim.keymap.set("t", "<C-t>", function()
+                require("nvim-tree-terminal").focus_tree()
+              end, { buffer = args.buf, noremap = true, silent = true, desc = "Focus file tree" })
+
+              -- Ctrl+Shift+T in terminal to close terminal
+              vim.keymap.set("t", "<C-S-t>", function()
+                require("nvim-tree-terminal").close()
+              end, { buffer = args.buf, noremap = true, silent = true, desc = "Close terminal" })
+
+              -- Escape to exit terminal insert mode
+              vim.keymap.set("t", "<Esc>", "<C-\><C-n>", { buffer = args.buf, noremap = true, silent = true })
             end,
           })
         '';
