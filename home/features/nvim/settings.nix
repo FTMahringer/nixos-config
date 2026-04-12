@@ -168,8 +168,6 @@
           -- Load nvim-tree-delete module
           ${builtins.readFile ./lua/nvim-tree-delete.lua}
 
-          -- Load nvim-tree-terminal module
-          ${builtins.readFile ./lua/nvim-tree-terminal.lua}
         '';
 
         luaConfigPost = ''
@@ -218,15 +216,6 @@
                 require("nvim-tree-delete").delete()
               end, { buffer = args.buf, noremap = true, silent = true, desc = "Delete file/folder" })
 
-              -- Ctrl+T to toggle/open terminal at bottom
-              vim.keymap.set("n", "<C-t>", function()
-                require("nvim-tree-terminal").toggle()
-              end, { buffer = args.buf, noremap = true, silent = true, desc = "Toggle terminal" })
-
-              -- Ctrl+Shift+T to close terminal
-              vim.keymap.set("n", "<C-S-t>", function()
-                require("nvim-tree-terminal").close()
-              end, { buffer = args.buf, noremap = true, silent = true, desc = "Close terminal" })
             end,
           })
 
