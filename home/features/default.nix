@@ -10,5 +10,6 @@
     ./theming.nix
     ./ai-tools.nix
     ./daily-tools.nix
+    ./general-dev.nix
   ];
 }

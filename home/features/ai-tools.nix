@@ -1,5 +1,9 @@
 { config, lib, pkgs, inputs, ... }:
 
+let
+  # nixpalette → Stylix base16 colors
+  c = config.lib.stylix.colors;
+in
 {
   # AI coding agents packages
   home.packages = [
@@ -10,7 +14,7 @@
     pkgs.opencode
   ];
 
-  # Kimi CLI configuration
+  # Kimi CLI configuration with nixpalette colors
   # Config location: ~/.kimi/config.toml
   home.file.".kimi/config.toml".text = lib.mkDefault ''
     default_model = "kimi-for-coding"
@@ -49,7 +53,7 @@
     tool_call_timeout_ms = 60000
   '';
 
-  # OpenCode configuration
+  # OpenCode configuration with nixpalette theming
   # Config location: ~/.opencode/config.json
   home.file.".opencode/config.json".text = lib.mkDefault ''
     {
@@ -72,4 +76,11 @@
       "plugin": []
     }
   '';
+
+  # OpenCode theme override using environment variables for terminal colors
+  # OpenCode respects terminal colors, so nixpalette/stylix terminal theming will apply
+  home.sessionVariables = {
+    # Ensure OpenCode uses terminal colors (which are themed by nixpalette)
+    OPENCODE_THEME = "system";
+  };
 }

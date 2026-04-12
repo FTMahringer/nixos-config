@@ -71,5 +71,9 @@
     dates = [ "weekly" ];
   };
 
+  # --- Docker ---
+  virtualisation.docker.enable = true;
+  users.users.fynn.extraGroups = [ "wheel" "networkmanager" "docker" ];
+
   system.stateVersion = "25.11";
 }
