@@ -1,5 +1,14 @@
-{ config, ... }:
+{ config, osConfig, ... }:
 {
+  # Mirror nixpalette settings from NixOS so the HM module can configure
+  # stylix at user level. Required because stylix.homeManagerIntegration.autoImport
+  # is disabled (to prevent double-import of the stylix HM module).
+  nixpalette = {
+    enable       = true;
+    theme        = osConfig.nixpalette.theme;
+    userThemeDir = osConfig.nixpalette.userThemeDir;
+  };
+
   # ── nixpalette-hyprland (Hyprland-specific theming) ──────────────────────
   #
   # The nixpalette-hyprland HM module provides:
