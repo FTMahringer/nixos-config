@@ -79,7 +79,9 @@
           inputs.nixpalette-hyprland.nixosModules.default
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
-            # nixpalette-hyprland HM module bundles nixpalette HM module too
+            # nixpalette-hyprland HM module bundles nixpalette + stylix HM modules.
+            # Disable stylix's auto-inject so stylix HM module is only loaded once.
+            stylix.homeManagerIntegration.autoImport = false;
             home-manager.sharedModules = [ inputs.nixpalette-hyprland.homeManagerModules.default ];
           }
         ];
