@@ -1,12 +1,33 @@
+-- new-item.lua - File/folder creation for NvimTree
 local M = {}
 
---- Return the directory path the cursor is currently in.
---- If the cursor is on a file, returns its parent dir.
---- If the cursor is on a directory, returns that directory itself.
+-- File creation
+local function create_file(parent_path, api)
+  vim.ui.input({ prompt = "  File name: " }, function(name)
+    if not name or name == "" then return end
+    local full_path = parent_path .. "/" .. name
+    local dir = vim.fn.fnamemodify(full_path, ":h")
+    vim.fn.mkdir(dir, "p")
+    vim.fn.writefile({}, full_path)
+    api.tree.reload()
+    vim.cmd("edit " .. vim.fn.fnameescape(full_path))
+  end)
+end
+
+-- Folder creation
+local function create_folder(parent_path, api)
+  vim.ui.input({ prompt = "  Folder name: " }, function(name)
+    if not name or name == "" then return end
+    local full_path = parent_path .. "/" .. name
+    vim.fn.mkdir(full_path, "p")
+    api.tree.reload()
+  end)
+end
+
+-- Get parent directory of current node
 local function get_parent_path(api)
   local node = api.tree.get_node_under_cursor()
   if not node or not node.absolute_path then return nil end
-
   if node.fs_stat and node.fs_stat.type == "directory" then
     return node.absolute_path
   else
@@ -14,7 +35,7 @@ local function get_parent_path(api)
   end
 end
 
---- Show a "File / Folder" picker, then hand off to the relevant module.
+-- Main entry point
 M.create = function()
   local ok, api = pcall(require, "nvim-tree.api")
   if not ok then
@@ -35,11 +56,10 @@ M.create = function()
     { prompt = "New item in " .. display .. ":" },
     function(choice)
       if not choice then return end
-
       if choice:match("File") then
-        require("new-item.file").create(parent_path, api)
+        create_file(parent_path, api)
       else
-        require("new-item.folder").create(parent_path, api)
+        create_folder(parent_path, api)
       end
     end
   )
