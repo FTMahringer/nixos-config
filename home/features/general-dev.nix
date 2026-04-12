@@ -349,10 +349,12 @@ in
     };
   };
 
-  # --- Node Version Manager (fnm) Configuration ---
-  programs.fnm = {
-    enable = true;
-    enableZshIntegration = config.programs.zsh.enable;
-    # fnm will use the .nvmrc or .node-version file in projects
-  };
+  # --- fnm (Fast Node Manager) ---
+  # fnm is installed as a package, add shell integration manually
+  programs.zsh.initContent = lib.mkIf config.programs.zsh.enable (lib.mkAfter ''
+    # fnm - Fast Node Manager
+    if command -v fnm &> /dev/null; then
+      eval "$(fnm env --use-on-cd)"
+    fi
+  '');
 }
