@@ -41,6 +41,31 @@
 
         statusline.lualine.enable = true;
 
+        tabline.nvimBufferline = {
+          enable = true;
+          mappings = {
+            closeCurrent = "<C-x>";
+            cycleNext = "<Tab>";
+            cyclePrevious = "<S-Tab>";
+          };
+          setupOpts.options = {
+            mode = "buffers";
+            close_command = "bdelete! %d";
+            right_mouse_command = "bdelete! %d";
+            show_buffer_close_icons = true;
+            show_close_icon = false;
+            separator_style = "slant";
+            offsets = [
+              {
+                filetype = "NvimTree";
+                text = "Files";
+                text_align = "center";
+                separator = true;
+              }
+            ];
+          };
+        };
+
         filetree.nvimTree = {
           enable = true;
           setupOpts = {
@@ -52,7 +77,7 @@
               update_root = false;
             };
             view = {
-              width = 15;
+              width = 30;
               side = "left";
               preserve_window_proportions = true;
             };
