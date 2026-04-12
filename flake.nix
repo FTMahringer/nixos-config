@@ -49,15 +49,9 @@
       url = "github:nix-community/impermanence";
     };
 
-    nixpalette = {
-      url = "github:FT-nixforge/nixpalette";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nixpalette-hyprland = {
       url = "github:FT-nixforge/nixpalette-hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpalette.follows = "nixpalette";
     };
 
     hyprland = {
@@ -72,7 +66,7 @@
 
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixpalette, nixpalette-hyprland, ... }: {
+  outputs = inputs@{ self, nixpkgs, home-manager, nixpalette-hyprland, ... }: {
     nixosConfigurations = {
       laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -81,13 +75,11 @@
         modules = [
           ./hosts/laptop/configuration.nix
           home-manager.nixosModules.home-manager
-          # nixpalette includes stylix — do NOT also load inputs.stylix.nixosModules.stylix
-          inputs.nixpalette.nixosModules.default
-          # nixpalette-hyprland: swww daemon service + wallpaper mapping
+          # nixpalette-hyprland bundles nixpalette (stylix) + swww daemon
           inputs.nixpalette-hyprland.nixosModules.default
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
-            # Make nixpalette-hyprland HM module available to all users
+            # nixpalette-hyprland HM module bundles nixpalette HM module too
             home-manager.sharedModules = [ inputs.nixpalette-hyprland.homeManagerModules.default ];
           }
         ];
