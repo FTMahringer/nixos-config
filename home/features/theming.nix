@@ -1,4 +1,4 @@
-{ config, osConfig, ... }:
+{ config, lib, osConfig, ... }:
 {
   # Mirror nixpalette settings from NixOS so the HM module can configure
   # stylix at user level. Required because stylix.homeManagerIntegration.autoImport
@@ -62,7 +62,7 @@
     vim.enable      = false;
     nvf.enable      = false;    # ← Stylix's dedicated NVF target (separate from neovim)
     hyprlock.enable = false;    # ← we own hyprlock in home/features/hyprland/hyprlock.nix
-    hyprpaper.enable = false;   # ← swww (nixpalette-hyprland) handles wallpaper
+    hyprpaper.enable = lib.mkForce false;   # ← swww (nixpalette-hyprland) handles wallpaper
   };
 
   # GTK4 — HM 26.05 changed the default of gtk.gtk4.theme from
