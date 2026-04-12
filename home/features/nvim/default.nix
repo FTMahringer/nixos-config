@@ -2,7 +2,7 @@
 
 {
   imports = [
-    inputs.nvf.homeModules.default
+    inputs.nvf.homeManagerModules.default
     ./settings.nix
   ];
 }
