@@ -172,11 +172,11 @@ in
     changeDirWidgetCommand = "fd --type d --hidden --follow --exclude .git";
   };
 
-  # --- bat Configuration (for fzf previews) with nixpalette ---
+  # --- bat Configuration (for fzf previews) ---
+  # Note: bat theme is already set by nixpalette/stylix to "base16-stylix"
   programs.bat = {
     enable = true;
     config = {
-      theme = "base16";
       style = "numbers,changes,header";
     };
   };
