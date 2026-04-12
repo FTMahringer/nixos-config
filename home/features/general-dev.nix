@@ -155,7 +155,8 @@ in
     k9 = "k9s";
   };
 
-  # --- fzf Configuration with nixpalette colors ---
+  # --- fzf Configuration ---
+  # Note: fzf colors are already set by nixpalette/stylix
   programs.fzf = {
     enable = true;
     enableZshIntegration = config.programs.zsh.enable;
@@ -165,24 +166,10 @@ in
       "--border"
       "--preview 'bat --color=always {}'"
     ];
-    # Use nixpalette colors
+    # Use fd for faster file finding
     defaultCommand = "fd --type f --hidden --follow --exclude .git";
     fileWidgetCommand = "fd --type f --hidden --follow --exclude .git";
     changeDirWidgetCommand = "fd --type d --hidden --follow --exclude .git";
-    colors = {
-      bg = "#${c.base00}";
-      "bg+" = "#${c.base01}";
-      fg = "#${c.base05}";
-      "fg+" = "#${c.base06}";
-      hl = "#${c.base0D}";
-      "hl+" = "#${c.base0C}";
-      info = "#${c.base0A}";
-      prompt = "#${c.base0D}";
-      pointer = "#${c.base0C}";
-      marker = "#${c.base0B}";
-      spinner = "#${c.base0E}";
-      header = "#${c.base04}";
-    };
   };
 
   # --- bat Configuration (for fzf previews) with nixpalette ---
