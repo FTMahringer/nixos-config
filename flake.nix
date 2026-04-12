@@ -64,6 +64,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # AI coding agents
+    kimi-cli = {
+      url = "github:MoonshotAI/kimi-cli/1.31.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixpalette-hyprland, ... }: {

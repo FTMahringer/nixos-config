@@ -8,5 +8,6 @@
     ./shell
     ./terminal
     ./theming.nix
+    ./ai-tools.nix
   ];
 }
