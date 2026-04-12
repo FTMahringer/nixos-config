@@ -9,8 +9,8 @@ in
   home.packages = with pkgs; [
     # --- Languages & Runtimes ---
     nodejs           # Node.js (includes npm)
-    nodePackages.pnpm # Fast, disk space efficient package manager
-    nodePackages.yarn # Alternative package manager
+    pnpm              # Fast, disk space efficient package manager
+    yarn              # Alternative package manager
     bun              # Fast JavaScript runtime and package manager
 
     # --- Container & Virtualization ---
