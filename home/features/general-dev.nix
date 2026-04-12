@@ -34,7 +34,7 @@ in
 
     # --- Version Control ---
     git-lfs          # Git Large File Storage
-    delta            # Syntax-highlighting pager for git
+    # Note: delta is installed via programs.delta below
     tig              # Text-mode interface for git
 
     # --- Utilities ---
