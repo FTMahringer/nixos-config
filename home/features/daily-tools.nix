@@ -3,100 +3,6 @@
 let
   # nixpalette → Stylix base16 colors
   c = config.lib.stylix.colors;
-
-  # Zed settings with nixpalette theme overrides
-  zedSettings = builtins.fromJSON (builtins.readFile ./settings/zed-settings.json);
-
-  # Merge user's Zed settings with nixpalette theme overrides
-  zedSettingsWithTheme = zedSettings // {
-    # Use a base16-compatible theme
-    theme = "One Dark";  # Base16 dark theme that works well with nixpalette
-
-    # Override theme colors with nixpalette colors
-    theme_overrides = {
-      "One Dark" = {
-        # Background - base00
-        "background" = "#${c.base00}";
-        "surface.background" = "#${c.base01}";
-        "elevated_surface.background" = "#${c.base01}";
-        "panel.background" = "#${c.base01}";
-        "status_bar.background" = "#${c.base01}";
-        "title_bar.background" = "#${c.base01}";
-        "toolbar.background" = "#${c.base00}";
-        "tab_bar.background" = "#${c.base01}";
-        "tab.inactive_background" = "#${c.base01}";
-        "tab.active_background" = "#${c.base00}";
-
-        # Borders - base02
-        "border" = "#${c.base02}";
-        "border.variant" = "#${c.base02}";
-        "border.focused" = "#${c.base0D}";
-        "border.selected" = "#${c.base0D}";
-        "panel.focused_border" = "#${c.base0D}";
-
-        # Text - base05
-        "text" = "#${c.base05}";
-        "text.muted" = "#${c.base04}";
-        "text.placeholder" = "#${c.base03}";
-        "text.disabled" = "#${c.base03}";
-        "text.accent" = "#${c.base0D}";
-
-        # Accents - base16 colors
-        "accent" = "#${c.base0D}";  # Blue
-        "accent.hover" = "#${c.base0C}";  # Cyan
-
-        # Status colors
-        "error" = "#${c.base08}";  # Red
-        "warning" = "#${c.base0A}";  # Yellow
-        "success" = "#${c.base0B}";  # Green
-        "info" = "#${c.base0D}";  # Blue
-
-        # Syntax highlighting (base16 colors)
-        "syntax.comment" = { "color" = "#${c.base03}"; "font_style" = "italic"; };
-        "syntax.comment.doc" = { "color" = "#${c.base03}"; "font_style" = "italic"; };
-        "syntax.keyword" = "#${c.base0E}";  # Purple
-        "syntax.function" = "#${c.base0D}";  # Blue
-        "syntax.string" = "#${c.base0B}";  # Green
-        "syntax.type" = "#${c.base0A}";  # Yellow
-        "syntax.variable" = "#${c.base05}";  # White
-        "syntax.constant" = "#${c.base09}";  # Orange
-        "syntax.property" = "#${c.base08}";  # Red
-        "syntax.operator" = "#${c.base05}";  # White
-
-        # Players (multiplayer cursors)
-        "players" = [
-          { "cursor" = "#${c.base08}"; "background" = "#${c.base08}"; "selection" = "#${c.base08}"; }
-          { "cursor" = "#${c.base09}"; "background" = "#${c.base09}"; "selection" = "#${c.base09}"; }
-          { "cursor" = "#${c.base0A}"; "background" = "#${c.base0A}"; "selection" = "#${c.base0A}"; }
-          { "cursor" = "#${c.base0B}"; "background" = "#${c.base0B}"; "selection" = "#${c.base0B}"; }
-          { "cursor" = "#${c.base0C}"; "background" = "#${c.base0C}"; "selection" = "#${c.base0C}"; }
-          { "cursor" = "#${c.base0D}"; "background" = "#${c.base0D}"; "selection" = "#${c.base0D}"; }
-          { "cursor" = "#${c.base0E}"; "background" = "#${c.base0E}"; "selection" = "#${c.base0E}"; }
-          { "cursor" = "#${c.base0F}"; "background" = "#${c.base0F}"; "selection" = "#${c.base0F}"; }
-        ];
-
-        # Terminal colors (base16)
-        "terminal.background" = "#${c.base00}";
-        "terminal.foreground" = "#${c.base05}";
-        "terminal.black" = "#${c.base00}";
-        "terminal.red" = "#${c.base08}";
-        "terminal.green" = "#${c.base0B}";
-        "terminal.yellow" = "#${c.base0A}";
-        "terminal.blue" = "#${c.base0D}";
-        "terminal.magenta" = "#${c.base0E}";
-        "terminal.cyan" = "#${c.base0C}";
-        "terminal.white" = "#${c.base05}";
-        "terminal.bright_black" = "#${c.base03}";
-        "terminal.bright_red" = "#${c.base08}";
-        "terminal.bright_green" = "#${c.base0B}";
-        "terminal.bright_yellow" = "#${c.base0A}";
-        "terminal.bright_blue" = "#${c.base0D}";
-        "terminal.bright_magenta" = "#${c.base0E}";
-        "terminal.bright_cyan" = "#${c.base0C}";
-        "terminal.bright_white" = "#${c.base07}";
-      };
-    };
-  };
 in
 {
   # Daily essential applications
@@ -147,8 +53,59 @@ in
   stylix.targets.firefox.profileNames = [ "default" ];
 
   # --- Zed Editor Configuration ---
-  # Uses your settings with nixpalette theme overrides
-  xdg.configFile."zed/settings.json".text = lib.mkDefault (builtins.toJSON zedSettingsWithTheme);
+  # Copy user's settings.json and add nixpalette theme overrides via separate file
+  xdg.configFile."zed/settings.json".source = ./settings/zed-settings.json;
+
+  # Zed theme overrides with nixpalette colors (placed in themes directory)
+  xdg.configFile."zed/themes/nixpalette.json".text = ''
+    {
+      "name": "Nixpalette",
+      "author": "NixOS Config",
+      "themes": [
+        {
+          "name": "Nixpalette Dark",
+          "appearance": "dark",
+          "style": {
+            "background": "#${c.base00}",
+            "surface.background": "#${c.base01}",
+            "elevated_surface.background": "#${c.base01}",
+            "panel.background": "#${c.base01}",
+            "status_bar.background": "#${c.base01}",
+            "title_bar.background": "#${c.base01}",
+            "toolbar.background": "#${c.base00}",
+            "tab_bar.background": "#${c.base01}",
+            "tab.inactive_background": "#${c.base01}",
+            "tab.active_background": "#${c.base00}",
+            "border": "#${c.base02}",
+            "border.variant": "#${c.base02}",
+            "border.focused": "#${c.base0D}",
+            "border.selected": "#${c.base0D}",
+            "panel.focused_border": "#${c.base0D}",
+            "text": "#${c.base05}",
+            "text.muted": "#${c.base04}",
+            "text.placeholder": "#${c.base03}",
+            "text.disabled": "#${c.base03}",
+            "text.accent": "#${c.base0D}",
+            "accent": "#${c.base0D}",
+            "error": "#${c.base08}",
+            "warning": "#${c.base0A}",
+            "success": "#${c.base0B}",
+            "info": "#${c.base0D}",
+            "syntax.comment": { "color": "#${c.base03}", "font_style": "italic" },
+            "syntax.comment.doc": { "color": "#${c.base03}", "font_style": "italic" },
+            "syntax.keyword": "#${c.base0E}",
+            "syntax.function": "#${c.base0D}",
+            "syntax.string": "#${c.base0B}",
+            "syntax.type": "#${c.base0A}",
+            "syntax.variable": "#${c.base05}",
+            "syntax.constant": "#${c.base09}",
+            "syntax.property": "#${c.base08}",
+            "syntax.operator": "#${c.base05}"
+          }
+        }
+      ]
+    }
+  '';
 
   # --- Browser Configuration ---
   # Firefox configuration via Home Manager
