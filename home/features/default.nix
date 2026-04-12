@@ -9,5 +9,6 @@
     ./terminal
     ./theming.nix
     ./ai-tools.nix
+    ./daily-tools.nix
   ];
 }
