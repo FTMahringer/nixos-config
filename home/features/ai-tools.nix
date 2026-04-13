@@ -30,14 +30,6 @@ in
     # Wrappers for Zed integration
     kimiWrapper
     opencodeWrapper
-
-    # --- OPTIONAL: ACP (Agent Client Protocol) tools for Zed ---
-    # These are needed for Zed's agent_servers to work (see settings/zed-settings.json)
-    # Uncomment to install, or install manually via npm:
-    #
-    pkgs.nodePackages."@github/copilot-cli"  # GitHub Copilot CLI (if available)
-
-    # Or install manually: npm install -g @github/copilot-cli
   ];
 
   # Ensure AI tools are available in PATH for GUI apps (like Zed)
