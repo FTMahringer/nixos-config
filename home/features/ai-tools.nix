@@ -30,6 +30,14 @@ in
     # Wrappers for Zed integration
     kimiWrapper
     opencodeWrapper
+
+    # --- OPTIONAL: ACP (Agent Client Protocol) tools for Zed ---
+    # These are needed for Zed's agent_servers to work (see settings/zed-settings.json)
+    # Uncomment to install, or install manually via npm:
+    #
+    pkgs.nodePackages."@github/copilot-cli"  # GitHub Copilot CLI (if available)
+
+    # Or install manually: npm install -g @github/copilot-cli
   ];
 
   # Ensure AI tools are available in PATH for GUI apps (like Zed)
@@ -43,65 +51,87 @@ in
 
   # Kimi CLI configuration with nixpalette colors
   # Config location: ~/.kimi/config.toml
-  home.file.".kimi/config.toml".text = lib.mkDefault ''
-    default_model = "kimi-for-coding"
-    default_thinking = false
-    default_yolo = false
-    default_plan_mode = false
-    default_editor = "nvim"
-    theme = "dark"
-    merge_all_available_skills = false
+  # Initial config - copied once and left writable so kimi can save API key after login
+  home.activation.kimiConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # Create Kimi config directory if it doesn't exist
+    mkdir -p "$HOME/.kimi"
 
-    [providers.kimi-for-coding]
-    type = "kimi"
-    base_url = "https://api.kimi.com/coding/v1"
-    # NOTE: api_key must be set here or via KIMI_API_KEY environment variable
-    # Leave empty to use /login command (OAuth) - kimi will populate this after login
-    api_key = ""
+    # Copy config.toml only if it doesn't exist (preserves API key after login)
+    if [ ! -f "$HOME/.kimi/config.toml" ]; then
+      cat > "$HOME/.kimi/config.toml" << 'EOF'
+default_model = "kimi-for-coding"
+default_thinking = false
+default_yolo = false
+default_plan_mode = false
+default_editor = "nvim"
+theme = "dark"
+merge_all_available_skills = false
 
-    [models.kimi-for-coding]
-    provider = "kimi-for-coding"
-    model = "kimi-for-coding"
-    max_context_size = 262144
+[providers.kimi-for-coding]
+type = "kimi"
+base_url = "https://api.kimi.com/coding/v1"
+# NOTE: api_key will be populated after /login command
+api_key = ""
 
-    [loop_control]
-    max_steps_per_turn = 100
-    max_retries_per_step = 3
-    max_ralph_iterations = 0
-    reserved_context_size = 50000
-    compaction_trigger_ratio = 0.85
+[models.kimi-for-coding]
+provider = "kimi-for-coding"
+model = "kimi-for-coding"
+max_context_size = 262144
 
-    [background]
-    max_running_tasks = 4
-    keep_alive_on_exit = false
-    agent_task_timeout_s = 900
+[loop_control]
+max_steps_per_turn = 100
+max_retries_per_step = 3
+max_ralph_iterations = 0
+reserved_context_size = 50000
+compaction_trigger_ratio = 0.85
 
-    [mcp.client]
-    tool_call_timeout_ms = 60000
+[background]
+max_running_tasks = 4
+keep_alive_on_exit = false
+agent_task_timeout_s = 900
+
+[mcp.client]
+tool_call_timeout_ms = 60000
+EOF
+      chmod 644 "$HOME/.kimi/config.toml"
+    fi
   '';
 
   # OpenCode configuration with nixpalette theming
   # Config location: ~/.opencode/config.json
-  home.file.".opencode/config.json".text = lib.mkDefault ''
-    {
-      "$schema": "https://opencode.ai/config.json",
-      "provider": {
-        "opencode": {
-          "options": {}
-        }
-      },
-      "permission": {},
-      "mcp": {},
-      "tools": {}
-    }
-  '';
+  # Initial config - copied once and left writable
+  home.activation.opencodeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # Create OpenCode config directory if it doesn't exist
+    mkdir -p "$HOME/.opencode"
 
-  # OpenCode TUI configuration
-  home.file.".opencode/tui.json".text = lib.mkDefault ''
-    {
-      "$schema": "https://opencode.ai/tui.json",
-      "plugin": []
+    # Copy config.json only if it doesn't exist
+    if [ ! -f "$HOME/.opencode/config.json" ]; then
+      cat > "$HOME/.opencode/config.json" << 'EOF'
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "opencode": {
+      "options": {}
     }
+  },
+  "permission": {},
+  "mcp": {},
+  "tools": {}
+}
+EOF
+      chmod 644 "$HOME/.opencode/config.json"
+    fi
+
+    # Copy tui.json only if it doesn't exist
+    if [ ! -f "$HOME/.opencode/tui.json" ]; then
+      cat > "$HOME/.opencode/tui.json" << 'EOF'
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "plugin": []
+}
+EOF
+      chmod 644 "$HOME/.opencode/tui.json"
+    fi
   '';
 
   # OpenCode theme override using environment variables for terminal colors
@@ -109,5 +139,36 @@ in
   home.sessionVariables = {
     # Ensure OpenCode uses terminal colors (which are themed by nixpalette)
     OPENCODE_THEME = "system";
+  };
+
+  # --- ACP Tools Installation Helper ---
+  # Script to install ACP tools for Zed when needed
+  home.file.".local/bin/install-zed-acp-tools" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      # Install ACP (Agent Client Protocol) tools for Zed
+      # These are required for Zed's agent_servers to work
+
+      set -e
+
+      echo "Installing ACP tools for Zed..."
+
+      # Ensure npm global directory exists
+      mkdir -p "$HOME/.npm-packages"
+
+      # Install GitHub Copilot CLI
+      echo "Installing GitHub Copilot CLI..."
+      npm install -g @github/copilot-cli || echo "Failed to install GitHub Copilot CLI (may require auth)"
+
+      # Install other ACP tools if available
+      # Note: Some ACP tools may not be publicly available or may require specific installation
+
+      echo ""
+      echo "ACP tools installation complete!"
+      echo "Note: Some tools may require additional authentication:"
+      echo "  - GitHub Copilot: Run 'gh auth login' and 'gh copilot auth'"
+      echo "  - Other tools: Check their respective documentation"
+    '';
   };
 }
