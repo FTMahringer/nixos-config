@@ -3,14 +3,14 @@
 let
   cfg = config.ft.programs.zed;
 
-  # Wrap zed-editor so it always has nodejs in PATH for ACP registry agents
-  zed-wrapped = pkgs.symlinkJoin {
-    name = "zed-editor-wrapped";
-    paths = [ pkgs.zed-editor ];
-    buildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/zed \
-        --prefix PATH : "${pkgs.nodejs}/bin:/run/current-system/sw/bin"
+  # Wrapper for zed that ensures nodejs is in PATH.
+  # ACP registry agents (Claude, Codex, GitHub Copilot) spawn npm/npx
+  # internally to install their adapters. Without node in PATH, this fails.
+  zed-with-node = pkgs.writeShellApplication {
+    name = "zed";
+    runtimeInputs = [ pkgs.nodejs ];
+    text = ''
+      exec ${pkgs.zed-editor}/bin/zed "$@"
     '';
   };
 in
@@ -24,11 +24,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Replace the default zed-editor with our wrapped version that has
-    # nodejs in PATH. This ensures ACP registry agents (Claude, Codex,
-    # GitHub Copilot) can install their npm adapters internally.
-    nixpkgs.config.packageOverrides = pkgs: {
-      zed-editor = zed-wrapped;
-    };
+    # Add our wrapper to the system packages. It shadows the original zed-editor
+    # binary because writeShellApplication produces a "zed" binary in its bin/.
+    environment.systemPackages = [ zed-with-node ];
   };
 }
