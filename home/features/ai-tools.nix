@@ -1,47 +1,16 @@
 { config, lib, pkgs, inputs, ... }:
 
-let
-  # nixpalette → Stylix base16 colors
-  c = config.lib.stylix.colors;
-
-  # Wrapper for kimi to ensure it has proper environment
-  kimiWrapper = pkgs.writeShellScriptBin "kimi-zed" ''
-    # Ensure node and other tools are in PATH for Zed integration
-    export PATH="${pkgs.nodejs}/bin:$HOME/.npm-packages/bin:$PATH"
-    exec ${inputs.kimi-cli.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/kimi "$@"
-  '';
-
-  # Wrapper for opencode to ensure it has proper environment
-  opencodeWrapper = pkgs.writeShellScriptBin "opencode-zed" ''
-    # Ensure node and other tools are in PATH for Zed integration
-    export PATH="${pkgs.nodejs}/bin:$HOME/.npm-packages/bin:$PATH"
-    exec ${pkgs.opencode}/bin/opencode "$@"
-  '';
-in
 {
   # AI coding agents packages
   home.packages = [
-    # Kimi CLI - from flake input
+    # Kimi CLI - from flake input (supports ACP via `kimi acp`)
     inputs.kimi-cli.packages.${pkgs.stdenv.hostPlatform.system}.default
 
-    # OpenCode - from nixpkgs
+    # OpenCode - from nixpkgs (supports ACP via `opencode acp`)
     pkgs.opencode
-
-    # Wrappers for Zed integration
-    kimiWrapper
-    opencodeWrapper
   ];
 
-  # Ensure AI tools are available in PATH for GUI apps (like Zed)
-  # Zed spawns processes with a limited environment, so we need to ensure
-  # the tools are in a location that's always accessible
-  home.file.".local/bin/kimi".source = lib.mkForce "${inputs.kimi-cli.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/kimi";
-  home.file.".local/bin/opencode".source = lib.mkForce "${pkgs.opencode}/bin/opencode";
-
-  # Add ~/.local/bin to PATH
-  home.sessionPath = lib.mkBefore [ "$HOME/.local/bin" ];
-
-  # Kimi CLI configuration with nixpalette colors
+  # Kimi CLI configuration
   # Config location: ~/.kimi/config.toml
   # Initial config - copied once and left writable so kimi can save API key after login
   home.activation.kimiConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -89,7 +58,7 @@ EOF
     fi
   '';
 
-  # OpenCode configuration with nixpalette theming
+  # OpenCode configuration
   # Config location: ~/.opencode/config.json
   # Initial config - copied once and left writable
   home.activation.opencodeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -129,38 +98,6 @@ EOF
   # OpenCode theme override using environment variables for terminal colors
   # OpenCode respects terminal colors, so nixpalette/stylix terminal theming will apply
   home.sessionVariables = {
-    # Ensure OpenCode uses terminal colors (which are themed by nixpalette)
     OPENCODE_THEME = "system";
-  };
-
-  # --- ACP Tools Installation Helper ---
-  # Script to install ACP tools for Zed when needed
-  home.file.".local/bin/install-zed-acp-tools" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      # Install ACP (Agent Client Protocol) tools for Zed
-      # These are required for Zed's agent_servers to work
-
-      set -e
-
-      echo "Installing ACP tools for Zed..."
-
-      # Ensure npm global directory exists
-      mkdir -p "$HOME/.npm-packages"
-
-      # Install GitHub Copilot CLI
-      echo "Installing GitHub Copilot CLI..."
-      npm install -g @github/copilot-cli || echo "Failed to install GitHub Copilot CLI (may require auth)"
-
-      # Install other ACP tools if available
-      # Note: Some ACP tools may not be publicly available or may require specific installation
-
-      echo ""
-      echo "ACP tools installation complete!"
-      echo "Note: Some tools may require additional authentication:"
-      echo "  - GitHub Copilot: Run 'gh auth login' and 'gh copilot auth'"
-      echo "  - Other tools: Check their respective documentation"
-    '';
   };
 }

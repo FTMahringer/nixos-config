@@ -57,26 +57,23 @@
   },
   "agent_servers": {
     "kimi": {
+      "type": "custom",
+      "command": "kimi",
+      "args": ["acp"]
+    },
+    "opencode": {
+      "type": "custom",
+      "command": "opencode",
+      "args": ["acp"]
+    },
+    "claude-acp": {
       "type": "registry"
     },
     "codex-acp": {
       "type": "registry"
     },
-    "claude-acp": {
-      "type": "registry"
-    },
-    "github-copilot-cli": {
-      "type": "registry"
-    },
-    "junie-acp": {
-      "type": "registry"
-    },
     "github-copilot": {
       "type": "registry"
-    },
-    "opencode": {
-      "type": "extension",
-      "favorite_models": ["opencode/kimi-k2.5-free"]
     }
   },
   "git_panel": {
