@@ -22,6 +22,7 @@
   # Enable core programs
   ft.programs.git.enable = true;
   ft.programs.zsh.enable = true;
+  ft.programs.zed.enable = true;
 
   # Hyprland Wayland compositor (enables greetd, pipewire, polkit, portals)
   ft.programs.hyprland.enable = true;

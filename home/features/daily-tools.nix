@@ -237,4 +237,12 @@ in
       update_ms = 1000;
     };
   };
+
+  # ── nixprism — modern app launcher (replaces rofi) ───────────────────────
+  programs.nixprism = {
+    enable = true;
+    stylixIntegration = true;
+    hyprlandIntegration = true;
+    keybind = "SUPER, Space";
+  };
 }

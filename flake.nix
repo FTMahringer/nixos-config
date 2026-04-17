@@ -70,6 +70,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Modern app launcher (replaces rofi)
+    nixprism = {
+      url = "github:FT-nixforge/nixprism";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixpalette-hyprland, ... }: {
@@ -88,7 +94,10 @@
             # nixpalette-hyprland HM module bundles nixpalette + stylix HM modules.
             # Disable stylix's auto-inject so stylix HM module is only loaded once.
             stylix.homeManagerIntegration.autoImport = false;
-            home-manager.sharedModules = [ inputs.nixpalette-hyprland.homeModules.default ];
+            home-manager.sharedModules = [
+              inputs.nixpalette-hyprland.homeModules.default
+              inputs.nixprism.homeManagerModules.default
+            ];
           }
         ];
       };

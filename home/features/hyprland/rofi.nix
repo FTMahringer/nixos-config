@@ -2,26 +2,11 @@
 
 lib.mkIf config.ft.desktop.hyprland.enable {
 
+  # nixprism (enabled in daily-tools.nix) replaces rofi as the app launcher.
+  # We keep rofi available as a system package since nixprism uses it internally,
+  # but disable the home-manager rofi module to avoid config conflicts.
   programs.rofi = {
-    enable = true;
-    # rofi-wayland is the Wayland-native fork; required for Hyprland
-    package = pkgs.rofi;
-
-    # Stylix handles all color theming via stylix.targets.rofi.
-    # We only configure layout and behavior here.
-    extraConfig = {
-      modi = "drun,run,window,filebrowser";
-      show-icons = true;
-      drun-display-format = "{name}";
-      location = 0; # centered
-      disable-history = false;
-      hide-scrollbar = true;
-      display-drun = "   Apps";
-      display-run = "   Run";
-      display-window = "   Windows";
-      display-filebrowser = "   Files";
-      sidebar-mode = true;
-      kb-cancel = "Escape,Super_L";
-    };
+    enable = false;
   };
+
 }

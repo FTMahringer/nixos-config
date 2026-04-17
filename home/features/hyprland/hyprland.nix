@@ -27,7 +27,7 @@ lib.mkIf cfg.enable {
       "$mod" = "SUPER";
       "$terminal" = cfg.terminal;
       "$fileManager" = "${cfg.terminal} -e yazi";
-      "$menu" = "rofi -show drun";
+      "$menu" = "nixprism";
 
       # ── Startup ─────────────────────────────────────────────────────────────
       # waybar / mako / hypridle / hyprpaper start as systemd user services.

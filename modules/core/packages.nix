@@ -25,6 +25,10 @@ in
       cacert
       # Age encryption — used by sops-nix to encrypt/decrypt secrets
       age
+      # Node.js — required for Zed's ACP (Agent Client Protocol) registry agents.
+      # Zed spawns npm/npx internally to install adapters for Claude, Codex, etc.
+      # Without node in the global PATH, registry agents fail silently.
+      nodejs
     ];
   };
 }
