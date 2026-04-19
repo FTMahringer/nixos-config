@@ -2,6 +2,19 @@
 
 Flakes that are already built, published, and integrated into the config.
 
+All flakes live under [`github:FT-nixforge`](https://github.com/FT-nixforge).
+
+---
+
+## Design Principle
+
+No flake depends on a "sub-flake" that is specific to a single DE/compositor.
+For example:
+- ✅ `ft-nixprism` depends directly on `ft-nixpalette` (generic theming)
+- ❌ `ft-nixprism` would **never** depend on `ft-nixpalette-hyprland` (Hyprland-specific)
+
+Only purpose-built flakes (e.g. a Hyprland-specific tool) may depend on Hyprland-specific inputs. General-purpose flakes stay generic.
+
 ---
 
 ## Done
@@ -14,21 +27,22 @@ Flakes that are already built, published, and integrated into the config.
 | **Pattern** | Base16 color scheme generator |
 | **Provides** | `config.lib.stylix.colors` with `base00`–`base0F`, wallpaper path, font config |
 | **Used by** | Everything else in the ecosystem |
-| **Repo** | `github:FT-nixforge/nixpalette` |
+| **Repo** | [`github:FT-nixforge/nixpalette`](https://github.com/FT-nixforge/nixpalette) |
 | **Status** | ✅ Done — integrated at system + home level |
 
 ---
 
-### ft-nixpalette-hyprland — Hyprland-Specific Theming
+### ft-nixpalette-hyprland — Hyprland-Specific Theming Bundle
 
 | | |
 |:---|:---|
-| **Purpose** | Bundles ft-nixpalette + stylix + swww for Hyprland desktops |
+| **Purpose** | Bundles ft-nixpalette + stylix + swww **specifically** for Hyprland desktops |
 | **Pattern** | NixOS module + Home Manager module |
 | **Provides** | `nixpalette` system module, `stylix` HM integration, `swww` wallpaper daemon, `nixpalette-switch` script, themed configs for waybar, hyprlock, rofi/wofi |
-| **Used by** | This NixOS config (`hosts/laptop`) |
-| **Repo** | `github:FT-nixforge/nixpalette-hyprland` |
+| **Used by** | This NixOS config (`hosts/laptop`) only — it's a **config-specific bundle**, not a library |
+| **Repo** | [`github:FT-nixforge/nixpalette-hyprland`](https://github.com/FT-nixforge/nixpalette-hyprland) |
 | **Status** | ✅ Done — loaded as `nixosModules.default` and `homeModules.default` |
+| **Note** | This is a **bundle flake**, not a dependency. Other flakes consume `ft-nixpalette` directly, never this. |
 
 ---
 
@@ -39,9 +53,10 @@ Flakes that are already built, published, and integrated into the config.
 | **Purpose** | Replaces rofi with a Stylix-themed, centered, blurred launcher |
 | **Pattern** | Package + Home Manager module |
 | **Provides** | `programs.nixprism` HM options (`enable`, `stylixIntegration`, `hyprlandIntegration`, `keybind`) |
+| **Depends on** | `ft-nixpalette` (for Stylix colors) — **not** `ft-nixpalette-hyprland` |
 | **Trigger** | `SUPER+Space` |
 | **Used by** | Hyprland keybindings (`$menu = nixprism`) |
-| **Repo** | `github:FT-nixforge/nixprism` |
+| **Repo** | [`github:FT-nixforge/nixprism`](https://github.com/FT-nixforge/nixprism) |
 | **Status** | ✅ Done — loaded via `home-manager.sharedModules` |
 
 ---
@@ -49,9 +64,11 @@ Flakes that are already built, published, and integrated into the config.
 ## Dependency Graph
 
 ```
-ft-nixpalette (root theming engine)
-    └── ft-nixpalette-hyprland (Hyprland integration bundle)
-            └── ft-nixprism (launcher with stylix integration)
+ft-nixpalette (root theming engine — generic)
+    └── ft-nixprism (launcher — generic, stylix integration)
+
+ft-nixpalette-hyprland is NOT in this graph — it's a config bundle,
+not a library dependency. It consumes ft-nixpalette directly.
 ```
 
 ---

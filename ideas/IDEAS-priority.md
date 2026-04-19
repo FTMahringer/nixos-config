@@ -3,6 +3,19 @@
 These are the most impactful flakes to build first. Each one unlocks the next —
 start with the foundation (`ft-nixui`) and work up.
 
+All flakes live under [`github:FT-nixforge`](https://github.com/FT-nixforge).
+
+---
+
+## Design Principle
+
+No flake depends on a "sub-flake" that is specific to a single DE/compositor.
+For example:
+- ✅ `ft-nixbar` depends on `ft-nixpalette` (generic theming)
+- ❌ `ft-nixbar` would **never** depend on `ft-nixpalette-hyprland` (Hyprland-specific)
+
+Only purpose-built flakes (e.g. a Hyprland-specific tool) may depend on Hyprland-specific inputs. General-purpose flakes stay generic and consume `ft-nixpalette` + `ft-nixui` directly.
+
 ---
 
 ## Tier 1 — Foundation (Build These First)
@@ -14,6 +27,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Purpose** | The glue that makes every other flake feel like one cohesive desktop |
 | **What it provides** | Base16 → CSS variable generator, Rasi theme templates (for rofi-based tools), Blur/layer rule generators for Hyprland, Font resolution (role → font family), Spacing/sizing tokens, Animation presets |
 | **Used by** | ft-nixprism, ft-nixvault, ft-nixbar, ft-nixnotify, ft-nixlock, etc. |
+| **Depends on** | `ft-nixpalette` (for color resolution) |
 | **Why first?** | Without this, every flake reinvents theming. With it, everything matches automatically. |
 | **Effort** | Medium — mostly generators and template functions |
 
@@ -27,6 +41,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Backends** | EWW (default), custom GTK4 layer-shell, or Quickshell |
 | **Modules** | Workspaces, window title, system tray, clock, battery, network, bluetooth, volume, brightness, music (MPRIS + album art), notifications, CPU/RAM/thermal |
 | **Features** | ft-nixui auto-theming, click actions (battery → power menu), hover tooltips, animated transitions, popup panels (calendar, volume mixer, network list) |
+| **Depends on** | `ft-nixpalette` + `ft-nixui` (generic theming only) |
 | **Why first?** | The bar is the most visible part of the desktop. A polished bar makes everything else feel premium. |
 | **Effort** | High — lots of modules, but EWW gives us a head start |
 | **Status** | 🚧 Temporary eww config exists in `home/features/desktop/shared/bar.nix` |
@@ -41,6 +56,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Features** | Blurred desktop background or custom wallpaper, Clock + date + weather, Media player widget (current song), Notification summary (missed while away), Custom widgets (todo list, calendar events), Multiple user support, Fingerprint + password, Grace period (quick unlock after lock) |
 | **UI** | Fully ft-nixui-themed, widget positioning via config, animation on unlock |
 | **Integration** | ft-nixui colors, Hyprland lock protocol, MPRIS, UPower |
+| **Depends on** | `ft-nixpalette` + `ft-nixui` (generic theming only) |
 | **Why first?** | Lock screen is the first thing you see when returning to your computer. It's high visibility, low complexity. |
 | **Effort** | Medium — hyprlock is already close; we extend it |
 | **Status** | 🚧 Planned — currently using shared `hyprlock` in `home/features/desktop/shared/hyprlock.nix` as a temporary solution |
@@ -57,6 +73,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Features** | Grouped notifications (by app), searchable history, Inline actions (reply, dismiss all), Do-not-disturb profiles, Urgency-based timeouts, Image support (album art, icons), Progress notifications (file transfers, builds) |
 | **UI** | Rounded, blurred, animated, ft-nixui-colored, Multiple layouts (compact, expanded, minimal) |
 | **Integration** | ft-nixui colors, Hyprland blur, MPRIS for media notifications, UPower for battery |
+| **Depends on** | `ft-nixpalette` + `ft-nixui` (generic theming only) |
 | **Why?** | Notifications are a core desktop experience; they should be as polished as everything else |
 | **Effort** | Medium-High |
 
@@ -73,6 +90,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **UI** | Same style as ft-nixprism (centered, blurred, rounded, icon support) |
 | **Integration** | ft-nixui colors, Hyprland blur layer rules, optional `pinentry` replacement |
 | **Security** | Clipboard auto-clear, memory-only display, lock on screen lock |
+| **Depends on** | `ft-nixpalette` + `ft-nixui` (generic theming only) |
 | **Why?** | Natural extension of the ft-nixprism ecosystem; every desktop needs secure password access |
 | **Effort** | Medium |
 
@@ -86,8 +104,9 @@ start with the foundation (`ft-nixui`) and work up.
 | **Bindings** | `SUPER+Shift+S` → area screenshot → swappy edit, `SUPER+Alt+R` → toggle recording, `SUPER+Shift+R` → GIF recording |
 | **Features** | Screenshot → edit → copy/save/upload, Recording → notification with file path + action buttons, Auto-upload to 0x0.st/imgur, History browser |
 | **UI** | Notifications with action buttons (copy path, open folder, delete, upload), Post-capture edit with swappy |
-| **Dependencies** | `grim`, `slurp`, `swappy`, `wf-recorder`, `wl-clipboard`, `libnotify`, `tesseract` (OCR) |
+| **Runtime deps** | `grim`, `slurp`, `swappy`, `wf-recorder`, `wl-clipboard`, `libnotify`, `tesseract` (OCR) |
 | **Extras** | OCR: screenshot → extract text to clipboard, Screen annotation: draw on frozen screen before capture |
+| **Depends on** | `ft-nixpalette` + `ft-nixui` (generic theming only) |
 | **Why?** | Screenshot workflow on Linux is always awkward; this unifies it into one polished tool |
 | **Effort** | Medium |
 
@@ -104,6 +123,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Per-profile** | Hyprland layout/gaps/border, ft-nixbar config (or no bar), wallpaper, startup apps, notification settings, keybindings, monitor layout, performance governor |
 | **Trigger** | `SUPER+Shift+P` → ft-nixprism-style picker |
 | **Implementation** | Nix specialisations OR runtime config switching via Hyprland socket |
+| **Depends on** | `ft-nixpalette` + `ft-nixui` + `ft-nixbar` + `ft-nixlock` + `ft-nixnotify` |
 | **Why?** | One config, multiple contexts — no compromises between work and play |
 | **Effort** | High |
 
@@ -116,6 +136,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Purpose** | A terminal configuration framework that unifies kitty, wezterm, alacritty, foot, etc. |
 | **Features** | One config → generates configs for all supported terminals, ft-nixui color auto-application, Font synchronization, Keybinding consistency, Session restoration (tmux/zellij integration) |
 | **Integration** | ft-nixui colors, font packages, shell integration |
+| **Depends on** | `ft-nixpalette` + `ft-nixui` + `ft-nixfont` |
 | **Why?** | Switch terminals without losing your setup; consistent experience everywhere |
 | **Effort** | Medium |
 
@@ -128,6 +149,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Purpose** | Declarative font management with automatic fallback chains |
 | **Features** | Define font roles (sans, serif, mono, emoji, icon), Auto-download and install, Fallback chain generation, Nerd Font patching on-the-fly, Font preview tool, Per-app font overrides |
 | **Integration** | Stylix font settings, Home Manager fontconfig |
+| **Depends on** | `ft-nixpalette` (for font resolution integration) |
 | **Why?** | Font configuration on Linux is a mess; this makes it declarative and reliable |
 | **Effort** | Medium |
 
@@ -142,6 +164,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Purpose** | Sync dotfiles between machines effortlessly |
 | **Features** | Git-based with auto-commit on change, Machine-specific overlays (laptop vs desktop), Secret management (sops), Remote rebuild over SSH, Conflict resolution |
 | **Commands** | `ft-nixsync push`, `ft-nixsync pull`, `ft-nixsync deploy <host>`, `ft-nixsync diff`, `ft-nixsync status` |
+| **Depends on** | None (standalone tool) |
 | **Why?** | Keep laptop and desktop in sync without manual copying |
 | **Effort** | Medium |
 
@@ -155,6 +178,7 @@ start with the foundation (`ft-nixui`) and work up.
 | **Commands** | `ft-nixdev init`, `ft-nixdev shell`, `ft-nixdev list`, `ft-nixdev update` |
 | **Templates** | `node`, `rust`, `python`, `go`, `haskell`, `elixir`, `java`, `php`, `nix`, `lua` |
 | **Per-template** | Language server, formatter, linter, debugger, test runner, pre-commit hooks, direnv integration |
+| **Depends on** | None (standalone tool) |
 | **Why?** | Stop writing the same `flake.nix` boilerplate for every project |
 | **Effort** | High — many templates to maintain |
 
@@ -163,21 +187,25 @@ start with the foundation (`ft-nixui`) and work up.
 ## Dependency Graph
 
 ```
-ft-nixui (foundation)
-    ├── ft-nixbar
-    ├── ft-nixlock
-    ├── ft-nixnotify
-    ├── ft-nixvault
-    ├── ft-nixcast
-    └── ft-nixterm
+ft-nixpalette (generic theming root)
+    └── ft-nixui (generic UI library)
+            ├── ft-nixbar
+            ├── ft-nixlock
+            ├── ft-nixnotify
+            ├── ft-nixvault
+            ├── ft-nixcast
+            └── ft-nixterm
+
+ft-nixfont
+    └── ft-nixterm (needs consistent fonts)
 
 ft-nixbar + ft-nixlock + ft-nixnotify
     └── ft-nixswitch (needs all three to switch profiles)
 
-ft-nixfont
-    └── ft-nixterm (needs consistent fonts)
-    └── ft-nixui (font resolution)
+ft-nixsync + ft-nixdev are standalone (no theming deps)
 ```
+
+**Key rule:** No arrow points to `ft-nixpalette-hyprland`. It's a config bundle, not a library.
 
 ---
 
