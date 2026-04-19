@@ -6,31 +6,24 @@ let
 in
 lib.mkIf cfg.enable {
 
-  home.packages = with pkgs; [
-    grim # Screenshot (full screen or region)
-    slurp # Interactive region selector for grim
-    wl-clipboard # wl-copy / wl-paste for Wayland clipboard
-    cliphist # Clipboard history manager (rofi integration)
-  ];
-
   wayland.windowManager.hyprland = {
     enable = true;
     package = hyprlandPkg;
     xwayland.enable = true;
     # Integrate Hyprland with systemd so that graphical-session.target starts,
-    # which in turn starts waybar, mako, hypridle, and hyprpaper services.
+    # which in turn starts mako, hypridle, and other services.
     systemd.enable = true;
 
     settings = {
       monitor = [ "${cfg.monitor}" ];
 
       "$mod" = "SUPER";
-      "$terminal" = cfg.terminal;
-      "$fileManager" = "${cfg.terminal} -e yazi";
+      "$terminal" = config.ft.desktop.terminal;
+      "$fileManager" = "${config.ft.desktop.terminal} -e yazi";
       "$menu" = "nixprism";
 
       # ── Startup ─────────────────────────────────────────────────────────────
-      # waybar / mako / hypridle / hyprpaper start as systemd user services.
+      # mako / hypridle / hyprpaper start as systemd user services.
       # Only things without a proper systemd unit go here.
       exec-once = [
         "nm-applet --indicator"
@@ -214,8 +207,8 @@ lib.mkIf cfg.enable {
         "$mod,  Print, exec, grim - | wl-copy"
         "$mod SHIFT, Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png"
 
-        # Clipboard history (rofi picker)
-        "$mod, C, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+        # Clipboard history (nixprism picker)
+        "$mod, C, exec, cliphist list | nixprism --dmenu | cliphist decode | wl-copy"
 
         # Lock screen
         "$mod, L, exec, hyprlock"

@@ -8,13 +8,28 @@
   home-manager.users.fynn = {
     imports = [ ../../home ];
 
-    # Hyprland desktop environment
+    # Enable shared desktop features (mako, clipboard, screenshots, bar, etc.)
+    ft.desktop.enable = true;
+
+    # ── Desktop environment selection ────────────────────────────────────────
+    # Pick ONE compositor/DE.  They are mutually exclusive.
+
+    # Option 1: Hyprland (tiling Wayland compositor)
     ft.desktop.hyprland.enable = true;
-    # Bar selection: "waybar" (default) or "quickshell" (caelestia-dots/shell)
-    # ft.desktop.hyprland.bar = "quickshell";
+
+    # Option 2: Mango + Wayfire (Mango compositor effects + Wayfire)
+    # ft.desktop.mangowc.enable = true;
+
+    # ── Bar selection ────────────────────────────────────────────────────────
+    # "eww"    — ElKowar's Wacky Widgets (modern, highly customizable)  ← default
+    # "waybar" — Classic Waybar status bar
+    # "none"   — No bar
+    ft.desktop.bar.backend = "eww";
+
     # Monitor config — adjust to your display.  Default = auto-detect, no scaling.
     # Example for a 4K display at 2× scale: "eDP-1,3840x2160@60,0x0,2"
-    # ft.desktop.hyprland.monitor = ",preferred,auto,1.5";
+    # ft.desktop.hyprland.monitor = ",preferred,auto,1";
+    # ft.desktop.mangowc.monitor = ",preferred,auto,1";
 
     # Enable terminal emulators (toggle on/off here)
     ft.terminal.kitty.enable = true;

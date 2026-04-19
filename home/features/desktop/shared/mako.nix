@@ -1,6 +1,6 @@
 { config, lib, ... }:
 
-lib.mkIf config.ft.desktop.hyprland.enable {
+lib.mkIf config.ft.desktop.enable {
 
   services.mako = {
     enable = true;

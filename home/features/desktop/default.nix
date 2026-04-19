@@ -1,0 +1,9 @@
+{ ... }:
+
+{
+  imports = [
+    ./shared
+    ./hyprland
+    ./mangowc
+  ];
+}

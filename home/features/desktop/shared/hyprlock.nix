@@ -1,9 +1,10 @@
 { config, lib, ... }:
 
-# We manage hyprlock theming ourselves (stylix.targets.hyprlock disabled in
-# theming.nix) so we can choose the layout and reference colors directly via
+# Shared hyprlock configuration — works on any wlroots-based compositor.
+# Theming is managed ourselves (stylix.targets.hyprlock disabled in theming.nix)
+# so we can choose the layout and reference colors directly via
 # config.lib.stylix.colors.
-lib.mkIf config.ft.desktop.hyprland.enable {
+lib.mkIf config.ft.desktop.enable {
 
   programs.hyprlock = {
     enable = true;

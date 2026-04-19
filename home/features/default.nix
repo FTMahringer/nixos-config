@@ -3,7 +3,7 @@
 {
   imports = [
     ./git.nix
-    ./hyprland
+    ./desktop
     ./nvim
     ./shell
     ./terminal

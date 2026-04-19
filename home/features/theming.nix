@@ -18,8 +18,8 @@
   #   switcher  — adds nixpalette-switch script for live theme switching
   #   swww      — animated wallpaper daemon (NixOS-side systemd service)
   nixpalette-hyprland = {
-    hyprlock.enable = false; # we own hyprlock in home/features/hyprland/hyprlock.nix
-    waybar.enable   = true;  # generate ~/.config/waybar/colors.css
+    hyprlock.enable = false; # we own hyprlock in home/features/desktop/
+    waybar.enable   = lib.mkIf (config.ft.desktop.bar.backend or "waybar" == "waybar") true;
   };
 
   # Home-manager Stylix target overrides.
@@ -38,7 +38,6 @@
   #   gtk                      → GTK3 theme + icon theme
   #   hyprland                 → col.active_border, col.inactive_border, shadow color
   #   waybar                   → full base16 palette as @define-color CSS variables
-  #   rofi                     → colors.rasi injected into rofi config
   #   mako                     → background/text/border/progress colors
   #
   # DISABLED (managed elsewhere):
@@ -52,14 +51,14 @@
   #     of the desktop.  The `vim.theme` block must not be set in settings.nix.
   #
   #   hyprlock → We provide our own layout (blurred screenshot background,
-  #     clock labels) in home/features/hyprland/hyprlock.nix and reference
+  #     clock labels) in home/features/desktop/hyprland/hyprlock.nix and reference
   #     config.lib.stylix.colors directly for a fully custom look.
 
   stylix.targets = {
     neovim.enable   = false;
     vim.enable      = false;
     nvf.enable      = true;     # ← Stylix themes Neovim via nvf using nixpalette colors
-    hyprlock.enable = false;    # ← we own hyprlock in home/features/hyprland/hyprlock.nix
+    hyprlock.enable = false;    # ← we own hyprlock in home/features/desktop/
     hyprpaper.enable = lib.mkForce false;   # ← swww (nixpalette-hyprland) handles wallpaper
   };
 

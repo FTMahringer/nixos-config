@@ -142,6 +142,7 @@ Every flake in this ecosystem should:
 | **UI** | Fully Stylix-themed, widget positioning via config, animation on unlock |
 | **Integration** | nixpalette colors, Hyprland lock protocol, MPRIS, UPower |
 | **Why** | Lock screen is the first thing you see when returning to your computer |
+| **Status** | 🚧 Planned — currently using shared `hyprlock` in `home/features/desktop/shared/hyprlock.nix` as a temporary solution. Will be extracted into its own flake once the design stabilizes. |
 
 ---
 
