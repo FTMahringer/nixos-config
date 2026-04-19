@@ -1,6 +1,9 @@
-# Ideas for Ft-Nixos — New Flake Projects
+# Ideas for Ft-Nixos — Experimental & Wildcard Flake Projects
 
-A collection of potential standalone flakes that extend the NixOS ecosystem. Each follows the same pattern as ft-nixpalette, ft-ft-nixpalette-hyprland, and ft-nixprism: a focused tool with deep Stylix/ft-nixpalette integration and Hyprland support.
+A collection of potential standalone flakes that extend the NixOS ecosystem. Each follows the same pattern as ft-nixpalette, ft-nixpalette-hyprland, and ft-nixprism: a focused tool with deep Stylix/ft-nixpalette integration and Hyprland support.
+
+For **already-built flakes**, see [`IDEAS-done.md`](./IDEAS-done.md).  
+For **prioritized build order**, see [`IDEAS-priority.md`](./IDEAS-priority.md).
 
 ---
 
@@ -14,162 +17,9 @@ Every flake in this ecosystem should:
 
 ---
 
-## Existing Flakes (Reference)
-
-| Flake | Purpose | Pattern |
-|-------|---------|---------|
-| `ft-nixpalette` | Base16 color theming engine | Generates colors from themes |
-| `ft-ft-nixpalette-hyprland` | Hyprland-specific theming | HM module, generates CSS/configs |
-| `ft-nixprism` | Modern app launcher | Package + HM module, Stylix integration |
-
----
-
-## New Flake Ideas
-
----
-
-### ft-nixvault — Password Manager Launcher
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | Unified password manager launcher with Stylix theming |
-| **Trigger** | `SUPER+V` |
-| **Backends** | `rbw` (Bitwarden), `gopass`, `keepassxc-cli` |
-| **Features** | Search passwords → Enter copies to clipboard → Auto-clear after 45s → TOTP code generation → Username/password/type selection |
-| **UI** | Same style as ft-nixprism (centered, blurred, rounded, icon support) |
-| **Integration** | Stylix colors, Hyprland blur layer rules, optional `pinentry` replacement |
-| **Security** | Clipboard auto-clear, memory-only display, lock on screen lock |
-| **Why** | Natural extension of the ft-nixprism ecosystem; every desktop needs secure password access |
-
----
-
-### ft-nixcast — Screen Capture Tool
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | Unified screenshot and screen recording workflow |
-| **Bindings** | `SUPER+Shift+S` → area screenshot → swappy edit, `SUPER+Alt+R` → toggle recording, `SUPER+Shift+R` → GIF recording |
-| **Features** | Screenshot → edit → copy/save/upload, Recording → notification with file path + action buttons, Auto-upload to 0x0.st/imgur, History browser |
-| **UI** | Notifications with action buttons (copy path, open folder, delete, upload), Post-capture edit with swappy |
-| **Dependencies** | `grim`, `slurp`, `swappy`, `wf-recorder`, `wl-clipboard`, `libnotify`, `tesseract` (OCR) |
-| **Extras** | OCR: screenshot → extract text to clipboard, Screen annotation: draw on frozen screen before capture |
-| **Why** | Screenshot workflow on Linux is always awkward; this unifies it into one polished tool |
-
----
-
-### ft-nixswitch — Desktop Profile Switcher
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | Switch between complete desktop profiles instantly |
-| **Profiles** | `work` (minimal, focused, no distractions), `gaming` (performance mode, RGB sync, fullscreen-friendly), `minimal` (clean desktop, no bar, zen mode), `presentation` (big fonts, no notifications, high contrast), `social` (chat apps, notifications on, casual layout) |
-| **Per-profile** | Hyprland layout/gaps/border, waybar config (or no bar), wallpaper, startup apps, notification settings, keybindings, monitor layout, performance governor |
-| **Trigger** | `SUPER+Shift+P` → ft-nixprism-style picker |
-| **Implementation** | Nix specialisations OR runtime config switching via Hyprland socket |
-| **Integration** | Saves current profile, restores on login, per-profile autostart scripts |
-| **Why** | One config, multiple contexts — no compromises between work and play |
-
----
-
-### ft-nixdev — Project Environment Bootstrapper
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | Quick project environment setup with zero boilerplate |
-| **Commands** | `ft-nixdev init` → create `flake.nix` + `.envrc`, `ft-nixdev shell` → enter project shell, `ft-nixdev list` → show available templates, `ft-nixdev update` → update flake inputs |
-| **Templates** | `node` (pnpm + tsx + biome), `rust` (cargo + clippy + rust-analyzer), `python` (uv + ruff + pyright), `go` (go + golangci-lint + gopls), `haskell` (cabal + hls), `elixir` (mix + credo + lexical), `java` (maven/gradle + jdtls), `php` (composer + phpactor), `nix` (nixpkgs-fmt + statix + deadnix), `lua` (stylua + lua-language-server) |
-| **Per-template** | Language server, formatter, linter, debugger, test runner, pre-commit hooks, direnv integration |
-| **Integration** | ft-nixpalette colors for terminal tools, direnv auto-activation, git init option |
-| **Extras** | `ft-nixdev doctor` → check if all tools are installed, `ft-nixdev clean` → garbage collect old shells |
-| **Why** | Stop writing the same `flake.nix` boilerplate for every project |
-
----
-
-### ft-nixsync — Config Synchronization
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | Sync dotfiles between machines effortlessly |
-| **Features** | Git-based with auto-commit on change, machine-specific overlays (laptop vs desktop), secret management (sops), remote rebuild over SSH, conflict resolution |
-| **Commands** | `ft-nixsync push` → commit + push, `ft-nixsync pull` → pull + rebuild, `ft-nixsync deploy <host>` → rebuild remote machine, `ft-nixsync diff` → see uncommitted changes, `ft-nixsync status` → sync status across machines |
-| **Integration** | Uses existing flake structure, respects sops-nix secrets, handles different hardware configs |
-| **Why** | Keep laptop and desktop in sync without manual copying |
-
----
-
-### ft-nixbar — Unified Status Bar Framework
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | A modular, theme-aware status bar that replaces waybar with something more integrated |
-| **Backends** | GTK4 layer-shell, EWW (ElKowar's Wacky Widgets), or custom Quickshell-based |
-| **Modules** | Workspaces, window title, system tray, clock, battery, network, bluetooth, volume, brightness, music (with album art), notifications, weather, CPU/RAM/thermal, custom scripts |
-| **Features** | Stylix auto-theming, click actions (e.g., click battery → power menu), hover tooltips, animated transitions, popup panels (calendar, volume mixer, network list) |
-| **Integration** | ft-nixpalette colors, Hyprland workspace events, MPRIS for music, UPower for battery |
-| **Why** | waybar is powerful but config-heavy; a unified framework with batteries included would be a game-changer |
-
----
-
-### ft-nixterm — Unified Terminal Experience
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | A terminal configuration framework that unifies kitty, wezterm, alacritty, foot, etc. |
-| **Features** | One config → generates configs for all supported terminals, Stylix color auto-application, Font synchronization, Keybinding consistency across terminals, Session restoration (tmux/zellij integration), AI assistant integration (kimi/opencode in split pane) |
-| **Integration** | ft-nixpalette colors, font packages, shell integration |
-| **Why** | Switch terminals without losing your setup; consistent experience everywhere |
-
----
-
-### ft-nixnotify — Notification Daemon Framework
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | Replace mako with a more feature-rich, theme-aware notification system |
-| **Features** | Grouped notifications (by app), Notification history (searchable), Inline actions (reply, dismiss all, settings), Do-not-disturb profiles, Urgency-based timeouts, Image support (album art, icons), Progress notifications (file transfers, builds), Notification sounds (configurable) |
-| **UI** | Rounded, blurred, animated, Stylix-colored, Multiple layouts (compact, expanded, minimal) |
-| **Integration** | ft-nixpalette colors, Hyprland blur, MPRIS for media notifications, UPower for battery |
-| **Why** | Notifications are a core desktop experience; they should be as polished as everything else |
-
----
-
-### ft-nixlock — Advanced Lock Screen
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | Replace hyprlock with a more customizable, theme-aware lock screen |
-| **Features** | Blurred desktop background or custom wallpaper, Clock with date and weather, Media player widget (current song), Notification summary (missed while away), Custom widgets (todo list, calendar events), Multiple user support, Fingerprint + password, Grace period (quick unlock after lock) |
-| **UI** | Fully Stylix-themed, widget positioning via config, animation on unlock |
-| **Integration** | ft-nixpalette colors, Hyprland lock protocol, MPRIS, UPower |
-| **Why** | Lock screen is the first thing you see when returning to your computer |
-| **Status** | 🚧 Planned — currently using shared `hyprlock` in `home/features/desktop/shared/hyprlock.nix` as a temporary solution. Will be extracted into its own flake once the design stabilizes. |
-
----
-
-### ft-nixfont — Font Management System
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | Declarative font management with automatic fallback chains |
-| **Features** | Define font roles (sans, serif, mono, emoji, icon), Auto-download and install, Fallback chain generation (e.g., Inter → Noto Sans → system sans), Nerd Font patching on-the-fly, Font preview tool, Per-app font overrides |
-| **Integration** | Stylix font settings, Home Manager fontconfig |
-| **Why** | Font configuration on Linux is a mess; this makes it declarative and reliable |
-
----
-
-### ft-nixui — Shared UI Component Library (Meta-Flake)
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | A shared library/theme system used by all other flakes in the ecosystem |
-| **What it provides** | Rasi theme templates (for rofi-based tools), CSS variable generators (for GTK/web tools), Color resolution logic (Stylix → hex colors), Blur/layer rule generators (for Hyprland), Font resolution (role → font family), Spacing/sizing tokens (consistent padding, radii, etc.), Animation/transition presets |
-| **Used by** | ft-nixprism, ft-nixvault, ft-nixcast, ft-nixbar, ft-nixnotify, ft-nixlock, etc. |
-| **Benefit** | All tools feel like one cohesive desktop, not separate projects |
-| **Why** | This is the glue that makes the entire ecosystem feel polished and unified |
-
----
-
 ## Wildcard / Experimental Ideas
+
+These are ideas that don't yet have a priority tier. Some may become their own flakes, others may be absorbed into existing ones.
 
 | Name | Concept | Vibe |
 |------|---------|------|
@@ -207,14 +57,12 @@ Every flake in this ecosystem should:
 | **nixsys** | System info dashboard | "OS version, kernel, uptime, packages — pretty display" |
 | **nixkey** | Keybinding cheat sheet | "Forgot a shortcut? Press SUPER+? to see all" |
 | **nixtheme** | Live theme preview + switcher | "See all your themes, switch instantly, customize on the fly" |
-| **ft-nixfont** | Font preview + tester | "Type text, see it in all your fonts, pick the best" |
 | **nixcolor** | Color palette tool (extract from wallpaper, generate schemes) | "Create ft-nixpalette themes from any image" |
 | **nixwall** | Wallpaper manager (sources, schedules, effects) | "Unsplash, local folders, slideshows, blur effects" |
 | **nixcursor** | Cursor theme manager + preview | "Test cursor themes, apply system-wide" |
 | **nixicon** | Icon theme manager + preview | "Browse icon themes, see previews, apply" |
 | **nixgtk** | GTK theme preview + switcher | "Live preview GTK themes before applying" |
 | **nixqt** | Qt theme configuration helper | "Make Qt apps match your GTK theme" |
-| **ft-nixfont** | Font installation preview | "Preview Google Fonts, Nerd Fonts before installing" |
 | **nixemoji** | Emoji picker with search + favorites | "Better than basic emoji pickers — organized, searchable" |
 | **nixsymbol** | Special character picker | "Math symbols, arrows, currency — for writers/devs" |
 | **nixkaomoji** | Kaomoji picker (╯°□°）╯︵ ┻━┻ | "Japanese emoticons for fun" |
@@ -411,7 +259,6 @@ Every flake in this ecosystem should:
 | **nixmemory** | Memory map viewer | "Visual memory usage breakdown" |
 | **nixio** | IO analyzer | "Disk IO analysis" |
 | **nixsyscall** | Syscall counter | "Most used syscalls per app" |
-| **ft-nixlock** | Lock contention analyzer | "Find lock contention issues" |
 | **nixrace** | Race condition detector | "Detect data races" |
 | **nixleak** | Memory leak detector | "Find memory leaks" |
 | **nixsanitizer** | Sanitizer output parser | "Pretty sanitizer output" |
@@ -490,16 +337,4 @@ Every flake in this ecosystem should:
 
 ---
 
-## ft-nixui — Shared UI Component Library (Meta-Flake)
-
-| Aspect | Detail |
-|--------|--------|
-| **Purpose** | A shared library/theme system used by all other flakes in the ecosystem |
-| **What it provides** | Rasi theme templates (for rofi-based tools), CSS variable generators (for GTK/web tools), Color resolution logic (Stylix → hex colors), Blur/layer rule generators (for Hyprland), Font resolution (role → font family), Spacing/sizing tokens (consistent padding, radii, etc.), Animation/transition presets |
-| **Used by** | ft-nixprism, ft-nixvault, ft-nixcast, ft-nixbar, ft-nixnotify, ft-nixlock, etc. |
-| **Benefit** | All tools feel like one cohesive desktop, not separate projects |
-| **Why** | This is the glue that makes the entire ecosystem feel polished and unified |
-
----
-
-*Last updated: 2026-04-17*
+*Last updated: 2026-04-19*
