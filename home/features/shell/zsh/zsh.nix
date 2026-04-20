@@ -91,4 +91,10 @@ in
       bindkey '^M' accept-line-or-clear
     '';
   };
+
+  # Enable shared tools for zsh
+  programs.direnv.enableZshIntegration = true;
+  programs.fzf.enableZshIntegration = true;
+  programs.zoxide.enableZshIntegration = true;
+  programs.yazi.enableZshIntegration = true;
 }

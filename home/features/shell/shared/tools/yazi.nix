@@ -1,13 +1,12 @@
 {
   programs.yazi = {
     enable = true;
-    enableZshIntegration = true; # adds shell wrapper that cds on exit
     shellWrapperName = "y";      # explicit: silence deprecation warning
 
     settings = {
       opener = {
         edit = [
-          { run = ''nvim "$@"''; block = true; desc = "Edit with nvim"; }
+          { run = ''zeditor "$@"''; block = true; desc = "Edit with Zed"; }
         ];
       };
 

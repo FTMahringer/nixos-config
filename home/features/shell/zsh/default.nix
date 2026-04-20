@@ -1,8 +1,7 @@
 {
   imports = [
+    ../shared
     ./zsh.nix
     ./starship.nix
-    ./aliases.nix
-    ./tools
   ];
 }

@@ -1,7 +1,8 @@
-{ inputs, ... }:
+{ ... }:
 
 {
   imports = [
+    ./shared
     ./zsh
     ./fish
   ];

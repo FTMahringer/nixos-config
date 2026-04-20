@@ -17,8 +17,8 @@ in
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
-    enableFishIntegration = false;
-    enableBashIntegration = false;
+    enableFishIntegration = true;
+    enableBashIntegration = true;
 
     settings = {
       format = "$directory$git_branch$git_status$nix_shell$line_break$character";

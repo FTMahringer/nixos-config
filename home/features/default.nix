@@ -11,5 +11,6 @@
     ./ai-tools.nix
     ./daily-tools.nix
     ./general-dev.nix
+    ./home-dir
   ];
 }

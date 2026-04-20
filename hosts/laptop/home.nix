@@ -11,14 +11,15 @@
     # Enable shared desktop features (mako, clipboard, screenshots, bar, etc.)
     ft.desktop.enable = true;
 
-    # ── Desktop environment selection ────────────────────────────────────────
-    # Pick ONE compositor/DE.  They are mutually exclusive.
+    # Structured home directory layout
+    ft.homeDir.enable = true;
+    # ft.homeDir.nixosConfigPath = /etc/nixos;  # default, change if your flake lives elsewhere
 
-    # Option 1: Hyprland (tiling Wayland compositor)
-    ft.desktop.hyprland.enable = true;
-
-    # Option 2: Mango + Wayfire (Mango compositor effects + Wayfire)
-    # ft.desktop.mangowc.enable = true;
+    # ── Desktop compositor selection ─────────────────────────────────────────
+    # Pick ONE — mutually exclusive.
+    #   "hyprland"  — Hyprland tiling Wayland compositor  ← default
+    #   "mangowc"   — Mango compositor + Wayfire
+    ft.desktop.compositor = "hyprland";
 
     # ── Bar selection ────────────────────────────────────────────────────────
     # "eww"    — ElKowar's Wacky Widgets (modern, highly customizable)  ← default
