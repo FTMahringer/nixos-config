@@ -7,7 +7,7 @@
   # ── nixpalette-hyprland (Hyprland-specific theming) ──────────────────────
   nixpalette-hyprland = {
     hyprlock.enable = false;
-    waybar.enable   = lib.mkIf (config.ft.desktop.bar.backend or "waybar" == "waybar") true;
+    waybar.enable   = lib.mkIf ((config.ft.desktop.bar.backend or "waybar") == "waybar") true;
   };
 
   # Home-manager Stylix target overrides
