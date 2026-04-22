@@ -44,7 +44,7 @@ in
 
         # Remove old token line if present
         if [ -f "$NIX_USER_CONF" ]; then
-          ${pkgs.gnused}/bin/sed -i '/^access-tokens = github.com=/d' "$NIX_USER_CONF" 2>/dev/null || true
+          ${pkgs.gnused}/bin/sed -i '/^extra-access-tokens = github.com=/d' "$NIX_USER_CONF" 2>/dev/null || true
         fi
 
         # Write new token
@@ -59,7 +59,7 @@ in
     system.activationScripts.github-token-system = lib.mkAfter ''
       TOKEN_FILE="${cfg.secretPath}"
       TOKEN_DIR="/etc/nix/secrets"
-      TOKEN_CONF="$TOKEN_DIR/access-tokens.conf"
+      TOKEN_CONF="$TOKEN_DIR/extra-access-tokens.conf"
       NIX_CONF="/etc/nix/nix.conf"
 
       mkdir -p "$TOKEN_DIR"
@@ -72,10 +72,10 @@ in
         chmod 600 "$TOKEN_CONF"
 
         # Ensure the include directive is present in nix.conf
-        if ! grep -qF '!include /etc/nix/secrets/access-tokens.conf' "$NIX_CONF" 2>/dev/null; then
+        if ! grep -qF '!include /etc/nix/secrets/extra-access-tokens.conf' "$NIX_CONF" 2>/dev/null; then
           echo '' >> "$NIX_CONF"
           echo '# Include GitHub access token (managed by sops-nix)' >> "$NIX_CONF"
-          echo '!include /etc/nix/secrets/access-tokens.conf' >> "$NIX_CONF"
+          echo '!include /etc/nix/secrets/extra-access-tokens.conf' >> "$NIX_CONF"
         fi
       else
         # Token file not available yet - write placeholder to prevent errors
