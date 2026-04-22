@@ -72,68 +72,70 @@ in
     # Write the GitHub token into the user's nix.conf.
     # The user-level config is read by the Nix client and takes effect
     # immediately without requiring a daemon restart.
-    system.activationScripts.github-token-user = lib.mkAfter ''
-      TOKEN_FILE="${cfg.secretPath}"
-      USER_HOME="/home/${cfg.user}"
-      NIX_USER_CONF="$USER_HOME/.config/nix/nix.conf"
-      NIX_USER_DIR="$USER_HOME/.config/nix"
+    system.activationScripts.github-token-user = lib.mkAfter
+      ''
+        TOKEN_FILE="${cfg.secretPath}"
+        USER_HOME="/home/${cfg.user}"
+        NIX_USER_CONF="$USER_HOME/.config/nix/nix.conf"
+        NIX_USER_DIR="$USER_HOME/.config/nix"
 
-      mkdir -p "$NIX_USER_DIR"
-      chown ${cfg.user}:users "$NIX_USER_DIR" 2>/dev/null || true
+        mkdir -p "$NIX_USER_DIR"
+        chown ${cfg.user}:users "$NIX_USER_DIR" 2>/dev/null || true
 
-      if [ -r "$TOKEN_FILE" ]; then
-        TOKEN=$(cat "$TOKEN_FILE" | tr -d '\n')
+        if [ -r "$TOKEN_FILE" ]; then
+          TOKEN=$(cat "$TOKEN_FILE" | tr -d '\n')
 
-        # Validate token format
-        if echo "$TOKEN" | grep -qE '^ssh-(ed25519|rsa|ecdsa|dsa)\s|^-----BEGIN'; then
-          echo "github-token-user: WARNING - The token looks like an SSH key, not a GitHub PAT." >&2
-          echo "  SSH keys do NOT work for GitHub API rate limits." >&2
-          echo "  Create a PAT at https://github.com/settings/tokens" >&2
+          # Validate token format
+          if echo "$TOKEN" | grep -qE '^ssh-(ed25519|rsa|ecdsa|dsa)\s|^-----BEGIN'; then
+            echo "github-token-user: WARNING - The token looks like an SSH key, not a GitHub PAT." >&2
+            echo "  SSH keys do NOT work for GitHub API rate limits." >&2
+            echo "  Create a PAT at https://github.com/settings/tokens" >&2
+          fi
+
+          # Remove old token line if present
+          if [ -f "$NIX_USER_CONF" ]; then
+            ${pkgs.gnused}/bin/sed -i '/^access-tokens = github.com=/d' "$NIX_USER_CONF" 2>/dev/null || true
+          fi
+
+          # Write new token
+          echo "access-tokens = github.com=$TOKEN" >> "$NIX_USER_CONF"
+          chown ${cfg.user}:users "$NIX_USER_CONF" 2>/dev/null || true
+          chmod 600 "$NIX_USER_CONF" 2>/dev/null || true
+          echo "github-token-user: GitHub token written to $NIX_USER_CONF"
+        else
+          echo "github-token-user: WARNING - Token file $TOKEN_FILE not found" >&2
         fi
-
-        # Remove old token line if present
-        if [ -f "$NIX_USER_CONF" ]; then
-          ${pkgs.gnused}/bin/sed -i '/^access-tokens = github.com=/d' "$NIX_USER_CONF" 2>/dev/null || true
-        fi
-
-        # Write new token
-        echo "access-tokens = github.com=$TOKEN" >> "$NIX_USER_CONF"
-        chown ${cfg.user}:users "$NIX_USER_CONF" 2>/dev/null || true
-        chmod 600 "$NIX_USER_CONF" 2>/dev/null || true
-        echo "github-token-user: GitHub token written to $NIX_USER_CONF"
-      else
-        echo "github-token-user: WARNING - Token file $TOKEN_FILE not found" >&2
-      fi
-    '';
+      '';
 
     # Also write to system nix.conf for the daemon.
-    system.activationScripts.github-token-system = lib.mkAfter ''
-      TOKEN_FILE="${cfg.secretPath}"
-      TOKEN_DIR="/etc/nix/secrets"
-      TOKEN_CONF="$TOKEN_DIR/access-tokens.conf"
-      NIX_CONF="/etc/nix/nix.conf"
+    system.activationScripts.github-token-system = lib.mkAfter
+      ''
+        TOKEN_FILE="${cfg.secretPath}"
+        TOKEN_DIR="/etc/nix/secrets"
+        TOKEN_CONF="$TOKEN_DIR/access-tokens.conf"
+        NIX_CONF="/etc/nix/nix.conf"
 
-      mkdir -p "$TOKEN_DIR"
-      chmod 755 "$TOKEN_DIR"
+        mkdir -p "$TOKEN_DIR"
+        chmod 755 "$TOKEN_DIR"
 
-      if [ -r "$TOKEN_FILE" ]; then
-        TOKEN=$(cat "$TOKEN_FILE" | tr -d '\n')
-        # Write token to restricted file
-        echo "access-tokens = github.com=$TOKEN" > "$TOKEN_CONF"
-        chmod 600 "$TOKEN_CONF"
+        if [ -r "$TOKEN_FILE" ]; then
+          TOKEN=$(cat "$TOKEN_FILE" | tr -d '\n')
+          # Write token to restricted file
+          echo "access-tokens = github.com=$TOKEN" > "$TOKEN_CONF"
+          chmod 600 "$TOKEN_CONF"
 
-        # Ensure the include directive is present in nix.conf
-        if ! grep -qF '!include /etc/nix/secrets/access-tokens.conf' "$NIX_CONF" 2>/dev/null; then
-          echo '' >> "$NIX_CONF"
-          echo '# Include GitHub access token (managed by sops-nix)' >> "$NIX_CONF"
-          echo '!include /etc/nix/secrets/access-tokens.conf' >> "$NIX_CONF"
+          # Ensure the include directive is present in nix.conf
+          if ! grep -qF '!include /etc/nix/secrets/access-tokens.conf' "$NIX_CONF" 2>/dev/null; then
+            echo "" >> "$NIX_CONF"
+            echo "# Include GitHub access token (managed by sops-nix)" >> "$NIX_CONF"
+            echo "!include /etc/nix/secrets/access-tokens.conf" >> "$NIX_CONF"
+          fi
+          echo "github-token-system: GitHub token written to $TOKEN_CONF"
+        else
+          # Token file not available yet - write placeholder to prevent errors
+          echo "# GitHub token not yet available" > "$TOKEN_CONF"
+          chmod 600 "$TOKEN_CONF"
         fi
-        echo "github-token-system: GitHub token written to $TOKEN_CONF"
-      else
-        # Token file not available yet - write placeholder to prevent errors
-        echo "# GitHub token not yet available" > "$TOKEN_CONF"
-        chmod 600 "$TOKEN_CONF"
-      fi
-    '';
+      '';
   };
 }
