@@ -5,21 +5,19 @@ let
 in
 {
   options.ft.theming = {
-    enable = lib.mkEnableOption "nixpalette-based global theming";
+    enable = lib.mkEnableOption "ft-nixpalette-based global theming";
 
     theme = lib.mkOption {
       type = lib.types.str;
       default = "builtin:base/catppuccin-mocha";
       description = ''
-        nixpalette theme ID to activate.  Format:
-          "builtin:base/<name>"    — shipped with nixpalette
+        ft-nixpalette theme ID to activate.  Format:
+          "builtin:base/<name>"    — shipped with ft-nixpalette
           "builtin:derived/<name>" — derived builtin
           "user:base/<name>"       — your own theme in assets/themes/base/
           "user:derived/<name>"    — your own derived theme
 
-        Built-in themes: catppuccin-mocha, nord
-        Run `nix eval .#nixosConfigurations.laptop.config.nixpalette.availableThemes`
-        to list everything nixpalette can see.
+        Built-in themes: catppuccin-mocha, nord, gruvbox, dracula
       '';
     };
 
@@ -29,9 +27,6 @@ in
       description = ''
         Absolute path to the directory containing your user themes.
         Must have a base/ and/or derived/ subdirectory.
-        Example: set to `../../assets/themes` relative to configuration.nix,
-        or use an absolute path like /etc/nixos/assets/themes.
-        When null, only built-in themes are available.
       '';
     };
 
@@ -41,11 +36,7 @@ in
       description = ''
         Map of specialisation name → theme ID.
         Each entry generates a NixOS specialisation reachable from the
-        boot menu without a full rebuild.  Example:
-          specialisations = {
-            nord    = "builtin:base/nord";
-            gruvbox = "user:base/gruvbox";
-          };
+        boot menu without a full rebuild.
       '';
     };
 
@@ -53,33 +44,25 @@ in
       type = lib.types.listOf lib.types.str;
       default = [ ];
       description = ''
-        Additional theme IDs to bake into /etc/nixpalette/themes.json at
-        build time.  The active theme is always included automatically.
-        The nixpalette-switch script reads this file to enable live theme
-        switching without a NixOS rebuild.
-        Example:
-          preloadThemes = [
-            "builtin:base/nord"
-            "builtin:base/catppuccin-latte"
-          ];
+        Additional theme IDs to bake into /etc/ft-nixpalette/themes.json at
+        build time for live switching without a NixOS rebuild.
       '';
     };
   };
 
+  # Map ft.theming.* options to ft-nixpalette.* options
   config = lib.mkIf cfg.enable {
-    nixpalette = {
+    ft-nixpalette = {
       enable = true;
       theme = cfg.theme;
       userThemeDir = cfg.userThemeDir;
       specialisations = cfg.specialisations;
       preloadThemes = cfg.preloadThemes;
 
-      # Override Stylix defaults so every theme (builtin or user) gets:
+      # Override Stylix defaults so every theme gets:
       #   • JetBrainsMono Nerd Font for terminal icon support
       #   • Bibata cursor
       #   • Slight terminal transparency
-      # These sit above the per-theme mkDefault values, so they win
-      # regardless of what the theme.nix specifies for fonts.monospace.
       stylixOverrides = {
         fonts.monospace = {
           name = "JetBrainsMono Nerd Font";

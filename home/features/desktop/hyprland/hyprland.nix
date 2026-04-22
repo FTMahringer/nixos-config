@@ -20,7 +20,7 @@ lib.mkIf cfg.enable {
       "$mod" = "SUPER";
       "$terminal" = config.ft.desktop.terminal;
       "$fileManager" = "${config.ft.desktop.terminal} -e yazi";
-      "$menu" = "nixprism";
+      "$menu" = "ft-nixlaunch";
 
       # ── Startup ─────────────────────────────────────────────────────────────
       # mako / hypridle / hyprpaper start as systemd user services.

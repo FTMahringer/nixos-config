@@ -49,8 +49,9 @@
       url = "github:nix-community/impermanence";
     };
 
-    nixpalette-hyprland = {
-      url = "github:FT-nixforge/nixpalette-hyprland";
+    # FT-nixforge unified package registry
+    ft-nixpkgs = {
+      url = "github:FT-nixforge/ft-nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -71,14 +72,14 @@
     };
 
     # Modern app launcher (replaces rofi)
-    nixprism = {
-      url = "github:FT-nixforge/nixprism";
+    ft-nixlaunch = {
+      url = "github:FT-nixforge/ft-nixlaunch";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixpalette-hyprland, ... }: {
+  outputs = inputs@{ self, nixpkgs, home-manager, ft-nixpkgs, ... }: {
     nixosConfigurations = {
       laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -87,16 +88,12 @@
         modules = [
           ./hosts/laptop/configuration.nix
           home-manager.nixosModules.home-manager
-          # nixpalette-hyprland bundles nixpalette (stylix) + swww daemon
-          inputs.nixpalette-hyprland.nixosModules.default
+          # FT-nixforge theming + launcher
+          inputs.ft-nixpkgs.nixosModules.ft-nixpalette
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
-            # nixpalette-hyprland HM module bundles nixpalette + stylix HM modules.
-            # Disable stylix's auto-inject so stylix HM module is only loaded once.
-            stylix.homeManagerIntegration.autoImport = false;
             home-manager.sharedModules = [
-              inputs.nixpalette-hyprland.homeModules.default
-              inputs.nixprism.homeManagerModules.default
+              inputs.ft-nixpkgs.homeModules.ft-nixlaunch
             ];
           }
         ];
