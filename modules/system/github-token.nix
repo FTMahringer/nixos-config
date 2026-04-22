@@ -68,7 +68,7 @@ in
       if [ -r "$TOKEN_FILE" ]; then
         TOKEN=$(cat "$TOKEN_FILE" | tr -d '\n')
         # Write token to restricted file
-        echo "access-tokens = github.com=$TOKEN" > "$TOKEN_CONF"
+        echo "extra-access-tokens = github.com=$TOKEN" > "$TOKEN_CONF"
         chmod 600 "$TOKEN_CONF"
 
         # Ensure the include directive is present in nix.conf
