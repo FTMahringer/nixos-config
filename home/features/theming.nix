@@ -1,16 +1,43 @@
 { config, lib, osConfig, ... }:
 
 let
-  nixpaletteCfg = osConfig.ft-nixpalette or { };
+  nixosPalette = osConfig.ft-nixpalette or { };
+  nixosTheming = osConfig.ft.theming or { };
 in
 {
   # Mirror ft-nixpalette settings from NixOS so the HM module can configure
   # stylix at user level. Required because stylix.homeManagerIntegration.autoImport
   # is disabled (to prevent double-import of the stylix HM module).
-  nixpalette = {
+  ft-nixpalette = {
     enable       = true;
-    theme        = nixpaletteCfg.theme or "builtin:base/catppuccin-mocha";
-    userThemeDir = nixpaletteCfg.userThemeDir or null;
+    theme        = nixosPalette.theme or nixosTheming.theme or "builtin:base/catppuccin-mocha";
+    userThemeDir = nixosPalette.userThemeDir or nixosTheming.userThemeDir or null;
+    specialisations = nixosPalette.specialisations or nixosTheming.specialisations or { };
+    preloadThemes = nixosPalette.preloadThemes or nixosTheming.preloadThemes or [ ];
+
+    # Override Stylix defaults so every theme gets:
+    #   • JetBrainsMono Nerd Font for terminal icon support
+    #   • Bibata cursor
+    #   • Slight terminal transparency
+    stylixOverrides = {
+      fonts.monospace = {
+        name = "JetBrainsMono Nerd Font";
+        package = osConfig._module.args.pkgs.nerd-fonts.jetbrains-mono;
+      };
+
+      cursor = {
+        package = osConfig._module.args.pkgs.bibata-cursors;
+        name = "Bibata-Modern-Classic";
+        size = 24;
+      };
+
+      opacity = {
+        terminal = 0.95;
+        applications = 1.0;
+        desktop = 1.0;
+        popups = 1.0;
+      };
+    };
   };
 
   # ── nixpalette-hyprland (Hyprland-specific theming) ──────────────────────

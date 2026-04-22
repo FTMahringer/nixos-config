@@ -50,39 +50,16 @@ in
     };
   };
 
-  # Map ft.theming.* options to ft-nixpalette.* options
   config = lib.mkIf cfg.enable {
-    ft-nixpalette = {
-      enable = true;
-      theme = cfg.theme;
-      userThemeDir = cfg.userThemeDir;
-      specialisations = cfg.specialisations;
-      preloadThemes = cfg.preloadThemes;
-
-      # Override Stylix defaults so every theme gets:
-      #   • JetBrainsMono Nerd Font for terminal icon support
-      #   • Bibata cursor
-      #   • Slight terminal transparency
-      stylixOverrides = {
-        fonts.monospace = {
-          name = "JetBrainsMono Nerd Font";
-          package = pkgs.nerd-fonts.jetbrains-mono;
+    # NixOS specialisations for boot-menu theme switching
+    # Each specialisation overrides the home-manager ft-nixpalette theme
+    specialisation = lib.mapAttrs
+      (name: theme: {
+        configuration = {
+          home-manager.users.fynn.ft-nixpalette.theme = lib.mkForce theme;
         };
-
-        cursor = {
-          package = pkgs.bibata-cursors;
-          name = "Bibata-Modern-Classic";
-          size = 24;
-        };
-
-        opacity = {
-          terminal = 0.95;
-          applications = 1.0;
-          desktop = 1.0;
-          popups = 1.0;
-        };
-      };
-    };
+      })
+      cfg.specialisations;
 
     # Nerd Font available system-wide (e.g. for rofi, waybar, etc.)
     fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];

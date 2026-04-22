@@ -31,17 +31,17 @@
   # Theme IDs:  "builtin:base/<name>"  |  "user:base/<name>"  |  "user:derived/<name>"
   # Built-ins: catppuccin-mocha, nord, gruvbox, dracula
   # See assets/themes/ for user themes you can add.
-  ft-nixpalette = {
+  ft.theming = {
     enable = true;
     theme = "builtin:base/catppuccin-mocha";
     userThemeDir = ../../assets/themes;
-  };
 
-  # Boot-menu specialisations — each generates an alternate system config.
-  # Switch at boot or via: nixos-rebuild switch --specialisation <name>
-  ft-nixpalette.specialisations = {
-    nord    = "builtin:base/nord";
-    gruvbox = "user:base/gruvbox";
+    # Boot-menu specialisations — each generates an alternate system config.
+    # Switch at boot or via: nixos-rebuild switch --specialisation <name>
+    specialisations = {
+      nord    = "builtin:base/nord";
+      gruvbox = "user:base/gruvbox";
+    };
   };
 
   # --- OPTIONAL: Secrets Management (sops-nix) ---
