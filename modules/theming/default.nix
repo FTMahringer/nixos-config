@@ -25,7 +25,7 @@ in
       type = lib.types.nullOr lib.types.path;
       default = null;
       description = ''
-        Absolute path to the directory containing your user themes.
+        Path to the directory containing your user themes.
         Must have a base/ and/or derived/ subdirectory.
       '';
     };
@@ -39,29 +39,18 @@ in
         boot menu without a full rebuild.
       '';
     };
-
-    preloadThemes = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-      description = ''
-        Additional theme IDs to bake into /etc/ft-nixpalette/themes.json at
-        build time for live switching without a NixOS rebuild.
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
-    # NixOS specialisations for boot-menu theme switching
-    # Each specialisation overrides the home-manager ft-nixpalette theme
-    specialisation = lib.mapAttrs
-      (name: theme: {
-        configuration = {
-          home-manager.users.fynn.ft-nixpalette.theme = lib.mkForce theme;
-        };
-      })
-      cfg.specialisations;
+    # Pass all theming config to ft-nixpalette NixOS module
+    ft-nixpalette = {
+      enable = true;
+      theme = cfg.theme;
+      userThemeDir = cfg.userThemeDir;
+      specialisations = cfg.specialisations;
+    };
 
-    # Nerd Font available system-wide (e.g. for rofi, waybar, etc.)
+    # Nerd Font available system-wide
     fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
   };
 }
