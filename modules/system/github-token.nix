@@ -48,7 +48,7 @@ in
         fi
 
         # Write new token
-        echo "access-tokens = github.com=$TOKEN" >> "$NIX_USER_CONF"
+        echo "extra-access-tokens = github.com=$TOKEN" >> "$NIX_USER_CONF"
         chown ${cfg.user}:users "$NIX_USER_CONF" 2>/dev/null || true
         chmod 600 "$NIX_USER_CONF" 2>/dev/null || true
       fi
