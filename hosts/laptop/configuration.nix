@@ -35,7 +35,6 @@
     enable = true;
     theme = "builtin:base/catppuccin-mocha";
     userThemeDir = ../../assets/themes;
-    integrations.de = "Hyprland";
   };
 
   # Boot-menu specialisations — each generates an alternate system config.

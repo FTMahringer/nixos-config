@@ -1,12 +1,16 @@
 { config, lib, osConfig, ... }:
+
+let
+  nixpaletteCfg = osConfig.ft-nixpalette or { };
+in
 {
-  # Mirror nixpalette settings from NixOS so the HM module can configure
+  # Mirror ft-nixpalette settings from NixOS so the HM module can configure
   # stylix at user level. Required because stylix.homeManagerIntegration.autoImport
   # is disabled (to prevent double-import of the stylix HM module).
   nixpalette = {
     enable       = true;
-    theme        = osConfig.nixpalette.theme;
-    userThemeDir = osConfig.nixpalette.userThemeDir;
+    theme        = nixpaletteCfg.theme or "builtin:base/catppuccin-mocha";
+    userThemeDir = nixpaletteCfg.userThemeDir or null;
   };
 
   # ── nixpalette-hyprland (Hyprland-specific theming) ──────────────────────
