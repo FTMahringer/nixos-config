@@ -35,8 +35,7 @@
     enable = true;
     theme = "builtin:base/catppuccin-mocha";
     userThemeDir = ../../assets/themes;
-    # NOTE: integrations.de causes infinite recursion in ft-nixpalette.
-    # Hyprland color variables are generated manually below.
+    integrations.de = "Hyprland";
   };
 
   # Boot-menu specialisations — each generates an alternate system config.
