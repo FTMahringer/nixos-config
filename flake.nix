@@ -89,6 +89,7 @@
             # Disable auto-import to prevent double-loading.
             stylix.homeManagerIntegration.autoImport = false;
             home-manager.sharedModules = [
+              inputs.ft-nixpkgs.homeModules.ft-nixpalette
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
             ];
           }

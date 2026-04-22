@@ -51,6 +51,7 @@
   # 3. Create secrets/secrets.yaml and encrypt with: sops secrets/secrets.yaml
   # 4. Uncomment below:
   ft.security.sops.enable = true;
+  ft.system.github-token.enable = true;
 
   # --- OPTIONAL: Impermanence (ephemeral root) ---
   # WARNING: This requires a separate "persist" partition!

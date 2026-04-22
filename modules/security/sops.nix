@@ -35,6 +35,12 @@ in
         path = "/home/fynn/.ssh/id_ed25519";
       };
 
+      secrets."api_tokens/github" = {
+        owner = config.users.users.fynn.name;
+        group = config.users.users.fynn.group;
+        mode = "0600";
+      };
+
       # secrets."passwords/fynn" = {
       #   neededForUsers = true;
       # };
