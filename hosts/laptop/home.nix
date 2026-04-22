@@ -9,7 +9,10 @@
     imports = [ ../../home ];
 
     # Enable ft-nixpalette theming (auto-integration disabled to prevent infinite recursion)
-    ft-nixpalette.enable = true;
+    ft-nixpalette = {
+      enable = true;
+      integrations.de = "Hyprland";
+    };
 
     # Enable shared desktop features (mako, clipboard, screenshots, bar, etc.)
     ft.desktop.enable = true;
