@@ -27,17 +27,20 @@
   # Hyprland Wayland compositor (enables greetd, pipewire, polkit, portals)
   ft.programs.hyprland.enable = true;
 
-  # Theming (nixpalette → Stylix) — change theme here to retheme everything.
+  # Theming (ft-nixpalette → Stylix) — change theme here to retheme everything.
   # Theme IDs:  "builtin:base/<name>"  |  "user:base/<name>"  |  "user:derived/<name>"
-  # Built-ins: catppuccin-mocha, nord
+  # Built-ins: catppuccin-mocha, nord, gruvbox, dracula
   # See assets/themes/ for user themes you can add.
-  ft.theming.enable = true;
-  ft.theming.theme = "builtin:base/catppuccin-mocha";
-  ft.theming.userThemeDir = ../../assets/themes;
+  ft-nixpalette = {
+    enable = true;
+    theme = "builtin:base/catppuccin-mocha";
+    userThemeDir = ../../assets/themes;
+    integrations.de = "Hyprland";
+  };
 
   # Boot-menu specialisations — each generates an alternate system config.
   # Switch at boot or via: nixos-rebuild switch --specialisation <name>
-  ft.theming.specialisations = {
+  ft-nixpalette.specialisations = {
     nord    = "builtin:base/nord";
     gruvbox = "user:base/gruvbox";
   };

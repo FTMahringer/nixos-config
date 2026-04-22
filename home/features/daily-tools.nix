@@ -238,8 +238,8 @@ in
     };
   };
 
-  # ── nixprism — modern app launcher (replaces rofi) ───────────────────────
-  programs.nixprism = {
+  # ── ft-nixlaunch — modern app launcher (replaces rofi) ───────────────────
+  programs.ft-nixlaunch = {
     enable = true;
     stylixIntegration = true;
     hyprlandIntegration = true;
