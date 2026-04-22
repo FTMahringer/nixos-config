@@ -85,6 +85,9 @@
           inputs.ft-nixpkgs.nixosModules.ft-nixpalette
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
+            # ft-nixpalette homeModules import stylix.homeModules.stylix.
+            # Disable auto-import to prevent double-loading.
+            stylix.homeManagerIntegration.autoImport = false;
             home-manager.sharedModules = [
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
             ];
