@@ -28,9 +28,9 @@ in
       if [ -r "$TOKEN_FILE" ]; then
         TOKEN=$(cat "$TOKEN_FILE" | tr -d '\n')
         # Remove old github.com line if present
-        ${pkgs.gnused}/bin/sed -i '/^access-tokens = github.com=/d' "$NIX_CONF" 2>/dev/null || true
+        ${pkgs.gnused}/bin/sed -i '/^extra-access-tokens = github.com=/d' "$NIX_CONF" 2>/dev/null || true
         # Append new token
-        echo "access-tokens = github.com=$TOKEN" >> "$NIX_CONF"
+        echo "extra-access-tokens = github.com=$TOKEN" >> "$NIX_CONF"
       fi
     '';
   };
