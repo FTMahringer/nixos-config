@@ -2,72 +2,72 @@
   description = "Ft-Nixos configuration";
 
   inputs = {
-    nixpkgs.url = "git+ssh://github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "git+ssh://github:nix-community/home-manager";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nvf = {
-      url = "git+ssh://github:NotAShelf/nvf";
+      url = "github:NotAShelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Modular flake structure - cleaner organization
     flake-parts = {
-      url = "git+ssh://github:hercules-ci/flake-parts";
+      url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
     # Unified formatting for all files
     treefmt-nix = {
-      url = "git+ssh://github:numtide/treefmt-nix";
+      url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Pre-commit hooks for quality checks
     git-hooks = {
-      url = "git+ssh://github:cachix/git-hooks.nix";
+      url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Keep your shell when using nix shell
     nix-your-shell = {
-      url = "git+ssh://github:MercuryTechnologies/nix-your-shell";
+      url = "github:MercuryTechnologies/nix-your-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Secrets management
     sops-nix = {
-      url = "git+ssh://github:Mic92/sops-nix";
+      url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Impermanence - ephemeral root
     impermanence = {
-      url = "git+ssh://github:nix-community/impermanence";
+      url = "github:nix-community/impermanence";
     };
 
     # FT-nixforge unified package registry
     ft-nixpkgs = {
-      url = "git+ssh://github:FT-nixforge/ft-nixpkgs";
+      url = "github:FT-nixforge/ft-nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland = {
-      url = "git+ssh://github:hyprwm/Hyprland/v0.54.3";
+      url = "github:hyprwm/Hyprland/v0.54.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     caelestia-shell = {
-      url = "git+ssh://github:caelestia-dots/shell";
+      url = "github:caelestia-dots/shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # AI coding agents
     kimi-cli = {
-      url = "git+ssh://github:MoonshotAI/kimi-cli/1.31.0";
+      url = "github:MoonshotAI/kimi-cli/1.31.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
