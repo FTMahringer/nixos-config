@@ -85,6 +85,7 @@
           # ft-nixpalette is NixOS-only. Stylix auto-propagates to HM users
           # via stylix.homeManagerIntegration (default: true).
           inputs.ft-nixpkgs.nixosModules.ft-nixpalette
+          inputs.ft-nixpkgs.nixosModules.ft-nixlaunch
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
