@@ -49,8 +49,8 @@ in
     thunderbird
   ];
 
-  # --- Tell stylix which profiles to theme ---
-  stylix.targets.firefox.profileNames = [ "default" ];
+  # NOTE: Firefox theming via Stylix is handled by the NixOS ft-nixpalette module.
+  # (stylix.targets.firefox is configured system-wide, not in HM)
 
   # --- Zed Editor Configuration ---
   # Initial Zed settings - copied once and then left writable

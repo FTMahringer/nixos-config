@@ -92,8 +92,7 @@
             # (it tries to read config.home-manager.users to set home-manager.users).
             ft-nixpalette.homeManagerIntegration.enable = false;
             home-manager.sharedModules = [
-              # ft-nixpalette HM module removed — Stylix is configured by NixOS module only.
-              # DE integration (Hyprland colors) comes from NixOS via /etc/ft-nixpalette/.
+              inputs.ft-nixpkgs.homeModules.ft-nixpalette
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
             ];
           }
