@@ -20,7 +20,7 @@ lib.mkIf cfg.enable {
       "$mod" = "SUPER";
       "$terminal" = config.ft.desktop.terminal;
       "$fileManager" = "${config.ft.desktop.terminal} -e yazi";
-      "$menu" = "ft-nixlaunch";
+      # $menu / SUPER+Space is managed by programs.ft-nixlaunch (hyprlandIntegration = true)
 
       # ── Startup ─────────────────────────────────────────────────────────────
       # mako / hypridle / hyprpaper start as systemd user services.
@@ -142,7 +142,7 @@ lib.mkIf cfg.enable {
         # Apps
         "$mod, Return, exec, $terminal"
         "$mod, E,      exec, $fileManager"
-        "$mod, Space,  exec, $menu"
+        # "$mod, Space,  exec, ft-nixlaunch" — injected by programs.ft-nixlaunch.hyprlandIntegration
         "$mod, B,      exec, firefox"
 
         # Window management

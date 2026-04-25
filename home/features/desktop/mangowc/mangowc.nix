@@ -70,7 +70,7 @@ lib.mkIf cfg.enable {
   # ── Wayfire config ────────────────────────────────────────────────────────
   xdg.configFile."wayfire.ini".text = lib.generators.toINI {} {
     core = {
-      plugins = "alpha animate autostart blur cube decoration expo fade fire zoom grid idle invert move place resize scale switcher vswipe window-rules wobbly wrot";
+      plugins = "alpha animate autostart blur command cube decoration expo fade fire zoom grid idle invert move place resize scale switcher vswipe window-rules wobbly wrot";
       close_top_view = "<super> KEY_Q | alt KEY_F4";
       vwidth = 3;
       vheight = 3;
@@ -93,6 +93,54 @@ lib.mkIf cfg.enable {
       natural_scroll = true;
       disable_while_typing = true;
       tap_to_click = true;
+    };
+
+    command = {
+      # ── App launcher ──────────────────────────────────────────────────────
+      binding_launcher = "<super> KEY_SPACE";
+      command_launcher = "ft-nixlaunch";
+
+      # ── Terminal ──────────────────────────────────────────────────────────
+      binding_terminal = "<super> KEY_ENTER";
+      command_terminal = config.ft.desktop.terminal;
+
+      # ── Browser ───────────────────────────────────────────────────────────
+      binding_browser = "<super> KEY_B";
+      command_browser = "firefox";
+
+      # ── File manager ──────────────────────────────────────────────────────
+      binding_files = "<super> KEY_E";
+      command_files = "${config.ft.desktop.terminal} -e yazi";
+
+      # ── Screenshots ───────────────────────────────────────────────────────
+      binding_screenshot_area   = "KEY_SYSRQ";
+      command_screenshot_area   = "grim -g \"$(slurp)\" - | wl-copy";
+      binding_screenshot_full   = "<super> KEY_SYSRQ";
+      command_screenshot_full   = "grim - | wl-copy";
+      binding_screenshot_save   = "<super> <shift> KEY_SYSRQ";
+      command_screenshot_save   = "grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png";
+
+      # ── Lock screen ───────────────────────────────────────────────────────
+      binding_lock = "<super> <shift> KEY_L";
+      command_lock = "hyprlock";
+
+      # ── Clipboard ─────────────────────────────────────────────────────────
+      binding_clipboard = "<super> KEY_C";
+      command_clipboard = "cliphist list | nixprism --dmenu | cliphist decode | wl-copy";
+
+      # ── Audio ─────────────────────────────────────────────────────────────
+      binding_vol_mute = "KEY_MUTE";
+      command_vol_mute = "pamixer -t";
+      binding_vol_up   = "KEY_VOLUMEUP";
+      command_vol_up   = "pamixer -i 5";
+      binding_vol_down = "KEY_VOLUMEDOWN";
+      command_vol_down = "pamixer -d 5";
+
+      # ── Brightness ───────────────────────────────────────────────────────
+      binding_brightness_up   = "KEY_BRIGHTNESSUP";
+      command_brightness_up   = "brightnessctl set 5%+";
+      binding_brightness_down = "KEY_BRIGHTNESSDOWN";
+      command_brightness_down = "brightnessctl set 5%-";
     };
 
     move = {
