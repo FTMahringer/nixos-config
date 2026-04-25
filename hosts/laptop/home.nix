@@ -14,7 +14,7 @@
     # and theme files in ~/.local/share/ft-nixpalette/.
     ft-nixpalette = {
       enable = true;
-      enableStylix = false;
+      #enableStylix = false;
       integrations.de = "Hyprland";
     };
 
