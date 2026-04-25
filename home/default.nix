@@ -1,6 +1,8 @@
+{ inputs, ... }:
 {
   imports = [
     ./features
+    inputs.ft-nixpkgs.homeModules.ft-nixpalette
   ];
 
   home = {
