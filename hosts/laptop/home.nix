@@ -8,11 +8,12 @@
   home-manager.users.fynn = {
     imports = [ ../../home ];
 
-    # Enable ft-nixpalette theming (auto-integration disabled to prevent infinite recursion)
-    ft-nixpalette = {
-      enable = true;
-      integrations.de = "Hyprland";
-    };
+    # NOTE: ft-nixpalette theming is handled entirely by the NixOS module.
+    # The HM ft-nixpalette module has been removed from sharedModules to
+    # prevent double Stylix definitions (stylix.cursor.package conflict).
+    # Hyprland color variables are provided system-wide via
+    #   /etc/ft-nixpalette/hyprland/colors.conf
+    # Source that in your hyprland.conf instead of the HM-generated file.
 
     # Enable shared desktop features (mako, clipboard, screenshots, bar, etc.)
     ft.desktop.enable = true;

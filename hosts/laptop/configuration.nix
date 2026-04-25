@@ -44,6 +44,10 @@
     };
   };
 
+  # ft-nixpalette DE integration — generates system-wide color configs
+  # (e.g. /etc/ft-nixpalette/hyprland/colors.conf)
+  ft-nixpalette.integrations.de = "Hyprland";
+
   # --- OPTIONAL: Secrets Management (sops-nix) ---
   # 1. Generate age key: mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/keys.txt
   # 2. Copy public key to secrets/.sops.yaml
