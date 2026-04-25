@@ -237,12 +237,4 @@ in
       update_ms = 1000;
     };
   };
-
-  # ── ft-nixlaunch — modern app launcher (replaces rofi) ───────────────────
-  programs.ft-nixlaunch = {
-    enable = true;
-    stylixIntegration = true;
-    hyprlandIntegration = true;
-    keybind = "SUPER, Space";
-  };
 }
