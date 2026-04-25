@@ -9,12 +9,11 @@
     imports = [ ../../home ];
 
     # ft-nixpalette Home-Manager configuration.
-    # enableStylix = false because Stylix is already configured by the NixOS module.
-    # The HM module still provides: DE integration, config.lib.stylix.colors API,
+    # The HM module provides: DE integration, config.lib.stylix.colors API,
     # and theme files in ~/.local/share/ft-nixpalette/.
+    # Stylix is configured exclusively by the NixOS module.
     ft-nixpalette = {
       enable = true;
-      #enableStylix = false;
       integrations.de = "Hyprland";
     };
 

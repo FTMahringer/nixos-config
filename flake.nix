@@ -88,9 +88,9 @@
             # ft-nixpalette homeModules import stylix.homeModules.stylix.
             # Disable auto-import to prevent double-loading.
             stylix.homeManagerIntegration.autoImport = false;
-            # Disable ft-nixpalette auto-integration to prevent infinite recursion
-            # (it tries to read config.home-manager.users to set home-manager.users).
-            ft-nixpalette.homeManagerIntegration.enable = false;
+            # ft-nixpalette no longer auto-propagates to home-manager.users
+            # (fixes infinite recursion). The HM module is imported via sharedModules
+            # and must be enabled manually in the user's HM config.
             home-manager.sharedModules = [
               inputs.ft-nixpkgs.homeModules.ft-nixpalette
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
