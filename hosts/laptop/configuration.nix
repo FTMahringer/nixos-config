@@ -46,6 +46,8 @@
 
   # ft-nixpalette DE integration — generates system-wide color configs
   # (e.g. /etc/ft-nixpalette/hyprland/colors.conf)
+  # NOTE: ft-nixpalette is enabled via ft.theming (see above).
+  # Do NOT also import the HM module — they conflict on Stylix config.
   ft-nixpalette.integrations.de = "Hyprland";
 
   # --- OPTIONAL: Secrets Management (sops-nix) ---

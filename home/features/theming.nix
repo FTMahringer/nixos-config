@@ -1,8 +1,8 @@
 { config, lib, osConfig, ... }:
 {
-  # ft-nixpalette theming is handled by the NixOS ft-nixpalette module.
-  # The Home-Manager ft-nixpalette module has enableStylix = false to avoid
-  # duplicate Stylix definitions. All stylix.targets are configured system-wide.
+  # ft-nixpalette is NixOS-only. Stylix runs system-wide and auto-propagates
+  # to Home-Manager via stylix.homeManagerIntegration (default: true).
+  # config.lib.stylix.colors is available in HM for custom theming.
 
   # GTK4 native theming
   gtk.gtk4.theme = null;

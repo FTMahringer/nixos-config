@@ -8,14 +8,10 @@
   home-manager.users.fynn = {
     imports = [ ../../home ];
 
-    # ft-nixpalette Home-Manager configuration.
-    # The HM module provides: DE integration, config.lib.stylix.colors API,
-    # and theme files in ~/.local/share/ft-nixpalette/.
-    # Stylix is configured exclusively by the NixOS module.
-    ft-nixpalette = {
-      enable = true;
-      integrations.de = "Hyprland";
-    };
+    # NOTE: ft-nixpalette is configured via the NixOS module (system-wide).
+    # The HM module (homeModules.default) is for standalone HM usage only.
+    # Do NOT enable ft-nixpalette here â€” it would conflict with the NixOS
+    # module since both configure Stylix.
 
     # Enable shared desktop features (mako, clipboard, screenshots, bar, etc.)
     ft.desktop.enable = true;

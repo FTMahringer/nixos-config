@@ -81,16 +81,12 @@
         modules = [
           ./hosts/laptop/configuration.nix
           home-manager.nixosModules.home-manager
-          # FT-nixforge theming + launcher
+          # FT-nixforge theming (NixOS module â€” system-wide Stylix + DE integration)
+          # ft-nixpalette is NixOS-only. Stylix auto-propagates to HM users
+          # via stylix.homeManagerIntegration (default: true).
           inputs.ft-nixpkgs.nixosModules.ft-nixpalette
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
-            # ft-nixpalette homeModules import stylix.homeModules.stylix.
-            # Disable auto-import to prevent double-loading.
-            stylix.homeManagerIntegration.autoImport = false;
-            # ft-nixpalette no longer auto-propagates to home-manager.users
-            # (fixes infinite recursion). The HM module is imported via sharedModules
-            # and must be enabled manually in the user's HM config.
             home-manager.sharedModules = [
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
             ];
