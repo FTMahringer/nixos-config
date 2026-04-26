@@ -65,10 +65,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    caelestia-shell = {
-      url = "github:caelestia-dots/shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # caelestia-shell = {
+    #   url = "github:caelestia-dots/shell";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     # AI coding agents
     kimi-cli = {
@@ -95,6 +95,7 @@
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
+              inputs.niri.homeModules.niri
             ];
           }
         ];

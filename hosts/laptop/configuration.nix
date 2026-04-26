@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports =
@@ -24,8 +24,9 @@
   ft.programs.zsh.enable = true;
   ft.programs.zed.enable = true;
 
-  # Hyprland Wayland compositor (enables greetd, pipewire, polkit, portals)
-  ft.programs.hyprland.enable = true;
+  # Compositor selection — drives system services (greetd, pipewire, portals)
+  # and ft-nixpalette DE integration automatically.
+  ft.desktop.compositor = "hyprland";
 
   # Theming (ft-nixpalette → Stylix) — change theme here to retheme everything.
   # Theme IDs:  "builtin:base/<name>"  |  "user:base/<name>"  |  "user:derived/<name>"
@@ -43,12 +44,6 @@
       gruvbox = "user:base/gruvbox";
     };
   };
-
-  # ft-nixpalette DE integration — generates system-wide color configs
-  # (e.g. /etc/ft-nixpalette/hyprland/colors.conf)
-  # NOTE: ft-nixpalette is enabled via ft.theming (see above).
-  # Do NOT also import the HM module — they conflict on Stylix config.
-  ft-nixpalette.integrations.de = "Hyprland";
 
   # --- OPTIONAL: Secrets Management (sops-nix) ---
   # 1. Generate age key: mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/keys.txt

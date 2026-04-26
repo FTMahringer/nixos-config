@@ -1,3 +1,5 @@
+{ config, ... }:
+
 {
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
@@ -21,41 +23,9 @@
     # ft.homeDir.nixosConfigPath = /etc/nixos;  # default, change if your flake lives elsewhere
 
     # ── Desktop compositor selection ─────────────────────────────────────────
-    # Pick ONE — mutually exclusive.
-    #   "hyprland"  — Hyprland tiling Wayland compositor  ← default
-    #   "mangowc"   — Mango compositor + Wayfire
-    #   "sway"      — Sway / SwayFX tiling Wayland compositor
-    #   "niri"      — Niri scrolling Wayland compositor
-    #   "river"     — River dynamic tiling Wayland compositor
-    ft.desktop.compositor = "hyprland";
-
-    # ── ft-nixlaunch compositor integration ──────────────────────────────────
-    # Must match ft.desktop.compositor above.
-    # ft-nixlaunch supported values: "Hyprland" | "Niri" | "GNOME" | "KDE" |
-    #                                "COSMIC"   | "MangoWC" | null
-    #
-    # Notes on unsupported compositors:
-    #   mangowc — ft-nixlaunch MangoWC integration writes Hyprland-style bind
-    #             syntax; our stack uses Wayfire INI [command] plugin instead.
-    #             Keybind already wired in wayfire.ini — use null here.
-    #   sway    — no ft-nixlaunch sway integration; keybind in sway.nix.
-    #   niri    — ft-nixlaunch Niri integration writes via
-    #             programs.niri.settings.binds (nixpkgs HM module), which
-    #             conflicts with our xdg.configFile approach — use null for
-    #             now; keybind lives in niri/config.kdl directly.
-    #   river   — no ft-nixlaunch integration; keybind in river init script.
-    programs.ft-nixlaunch.compositor = "Hyprland";
-
-    # Hyprland-specific launcher integration (only active when compositor = "Hyprland").
-    # Injects into wayland.windowManager.hyprland.settings automatically:
-    #   bind      = SUPER, space, exec, ft-nixlaunch
-    #   layerrule = blur,        rofi
-    #   layerrule = ignorezero,  rofi
-    programs.ft-nixlaunch.integrations.hyprland = {
-      keybind        = "SUPER, space";
-      blurLayerRules = true;   # frosted-glass blur on the rofi layer surface
-      dimAround      = false;  # set true for Spotlight-style dim behind launcher
-    };
+    # Set ft.desktop.compositor in configuration.nix — this is mirrored here
+    # automatically so all HM desktop modules and ft-nixlaunch pick it up.
+    ft.desktop.compositor = config.ft.desktop.compositor;
 
     # ── Bar selection ────────────────────────────────────────────────────────
     # "eww"    — ElKowar's Wacky Widgets (modern, highly customizable)  ← default

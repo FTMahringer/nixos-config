@@ -1,24 +1,29 @@
 { config, lib, ... }:
 
-# ── ft-nixlaunch — shared appearance & behavior defaults ────────────────────
-# This file owns everything that is the same across all hosts:
-# font, window geometry, layout, web search, terminal, color integration.
-#
-# What does NOT live here:
-#   compositor         — set in hosts/<host>/home.nix alongside ft.desktop.compositor
-#   integrations.*     — set in hosts/<host>/home.nix (keybind, blur rules, etc.)
-#
-# This keeps the host file as the single place where all compositor-related
-# choices are made, mirroring how ft-nixpalette.integrations.de lives in
-# hosts/<host>/configuration.nix.
-# ────────────────────────────────────────────────────────────────────────────
-lib.mkIf config.ft.desktop.enable {
+let
+  cfg = config.ft.desktop;
+
+  # Maps ft.desktop.compositor → programs.ft-nixlaunch.compositor.
+  # Compositors without a ft-nixlaunch integration (sway, river, mangowc) map
+  # to null so ft-nixlaunch manages its own keybind manually via the config file.
+  ftlCompositorMap = {
+    "hyprland" = "Hyprland";
+    "niri"     = "Niri";
+    "mangowc"  = null; # uses Wayfire INI [command] plugin keybind instead
+    "sway"     = null; # no ft-nixlaunch sway integration
+    "river"    = null; # no ft-nixlaunch integration
+  };
+in
+lib.mkIf cfg.enable {
   programs.ft-nixlaunch = {
     enable = true;
 
+    # ── Compositor integration ───────────────────────────────────────────────
+    # Derived automatically from ft.desktop.compositor — no need to set this
+    # separately in hosts/<host>/home.nix.
+    compositor = ftlCompositorMap.${cfg.compositor} or null;
+
     # ── Colors ──────────────────────────────────────────────────────────────
-    # Pull colors from ft-nixpalette → Stylix → config.lib.stylix.colors.
-    # ft-nixpalette is a NixOS-level module; Stylix auto-propagates to HM.
     nixpaletteIntegration = true;
 
     # ── Font ────────────────────────────────────────────────────────────────
