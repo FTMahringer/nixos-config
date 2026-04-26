@@ -95,7 +95,6 @@
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
-              inputs.niri.homeModules.niri
             ];
           }
         ];
