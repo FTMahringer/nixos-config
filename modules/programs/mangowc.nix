@@ -3,9 +3,11 @@
 let
   cfg = config.ft.programs.mangowc;
 
-  # wf-config 0.10.0 fails its test suite in nixpkgs because the linker
-  # can't find -ldoctest.  Disable checks so Wayfire builds cleanly.
-  wf-config-fixed = pkgs.wf-config.overrideAttrs (_: { doCheck = false; });
+  # wf-config 0.10.0 requires doctest which is missing in nixpkgs unstable.
+  # Pass -Dtests=disabled so meson doesn't look for it during configure.
+  wf-config-fixed = pkgs.wf-config.overrideAttrs (old: {
+    mesonFlags = (old.mesonFlags or []) ++ [ "-Dtests=disabled" ];
+  });
   wayfire-fixed   = pkgs.wayfire.override { wf-config = wf-config-fixed; };
 in
 {
