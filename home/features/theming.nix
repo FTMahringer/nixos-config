@@ -11,4 +11,9 @@
   # config.lib.stylix.colors directly — disable Stylix's auto-integration
   # so it doesn't conflict with our background definition.
   stylix.targets.hyprlock.enable = false;
+
+  # Tell Stylix which Firefox profile to theme (matches the profile declared
+  # in daily-tools.nix) and keep the legacy ~/.mozilla/firefox config path.
+  stylix.targets.firefox.profileNames = [ "default" ];
+  programs.firefox.configPath = ".mozilla/firefox";
 }
