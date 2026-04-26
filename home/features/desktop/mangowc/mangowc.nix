@@ -4,17 +4,16 @@ let
   cfg = config.ft.desktop.mangowc;
 
   # wf-config 0.10.0 fails its test suite — disable checks to build cleanly.
-  wf-config-fixed       = pkgs.wf-config.overrideAttrs (_: { doCheck = false; });
-  wayfire-fixed         = pkgs.wayfire.override { wf-config = wf-config-fixed; };
-  wayfirePlugins-fixed  = pkgs.wayfirePlugins.override { wayfire = wayfire-fixed; };
+  wf-config-fixed = pkgs.wf-config.overrideAttrs (_: { doCheck = false; });
+  wayfire-fixed   = pkgs.wayfire.override { wf-config = wf-config-fixed; };
 in
 lib.mkIf cfg.enable {
 
-  home.packages = [
+  home.packages = with pkgs; [
     wayfire-fixed
-    wayfirePlugins-fixed.wf-shell
-    wayfirePlugins-fixed.wcm
-    pkgs.mangohud
+    wayfirePlugins.wf-shell  # plugins are version-compatible; no override needed
+    wayfirePlugins.wcm
+    mangohud
   ];
 
   # ── Wayfire session wrapper ───────────────────────────────────────────────
