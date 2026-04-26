@@ -2,6 +2,11 @@
 
 let
   cfg = config.ft.programs.mangowc;
+
+  # wf-config 0.10.0 fails its test suite in nixpkgs because the linker
+  # can't find -ldoctest.  Disable checks so Wayfire builds cleanly.
+  wf-config-fixed = pkgs.wf-config.overrideAttrs (_: { doCheck = false; });
+  wayfire-fixed   = pkgs.wayfire.override { wf-config = wf-config-fixed; };
 in
 {
   options.ft.programs.mangowc = {
@@ -10,7 +15,7 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      wayfire
+      wayfire-fixed
       polkit_gnome
       networkmanagerapplet
       brightnessctl
@@ -46,7 +51,7 @@ in
           ${pkgs.tuigreet}/bin/tuigreet \
             --time \
             --remember \
-            --sessions ${pkgs.wayfire}/share/wayland-sessions
+            --sessions ${wayfire-fixed}/share/wayland-sessions
         '';
         user = "greeter";
       };
