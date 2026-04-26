@@ -14,11 +14,19 @@ in
     # wcm, …) gets the fixed wf-config without separate per-package overrides.
     nixpkgs.overlays = [
       (_final: prev: {
+        # wf-config and wayfire 0.10.x ship tests that link against doctest,
+        # which nixpkgs doesn't build as a compiled library.  Strip any
+        # existing -Dtests=* flag and replace it with -Dtests=disabled so
+        # meson never tries to find or link doctest.
         wf-config = prev.wf-config.overrideAttrs (old: {
-          mesonFlags = (old.mesonFlags or []) ++ [ "-Dtests=disabled" ];
+          mesonFlags =
+            lib.filter (f: !(lib.hasPrefix "-Dtests=" f)) (old.mesonFlags or [])
+            ++ [ "-Dtests=disabled" ];
         });
         wayfire = prev.wayfire.overrideAttrs (old: {
-          mesonFlags = (old.mesonFlags or []) ++ [ "-Dtests=disabled" ];
+          mesonFlags =
+            lib.filter (f: !(lib.hasPrefix "-Dtests=" f)) (old.mesonFlags or [])
+            ++ [ "-Dtests=disabled" ];
         });
       })
     ];
