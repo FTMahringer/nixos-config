@@ -13,8 +13,11 @@ in
     # Apply as an overlay so every package in the closure (wayfire, wf-shell,
     # wcm, …) gets the fixed wf-config without separate per-package overrides.
     nixpkgs.overlays = [
-      (final: prev: {
+      (_final: prev: {
         wf-config = prev.wf-config.overrideAttrs (old: {
+          mesonFlags = (old.mesonFlags or []) ++ [ "-Dtests=disabled" ];
+        });
+        wayfire = prev.wayfire.overrideAttrs (old: {
           mesonFlags = (old.mesonFlags or []) ++ [ "-Dtests=disabled" ];
         });
       })
