@@ -6,4 +6,9 @@
 
   # GTK4 native theming
   gtk.gtk4.theme = null;
+
+  # hyprlock is themed manually in desktop/shared/hyprlock.nix using
+  # config.lib.stylix.colors directly — disable Stylix's auto-integration
+  # so it doesn't conflict with our background definition.
+  stylix.targets.hyprlock.enable = false;
 }
