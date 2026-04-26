@@ -26,7 +26,7 @@
 
   # Compositor selection — drives system services (greetd, pipewire, portals)
   # and ft-nixpalette DE integration automatically.
-  ft.desktop.compositor = "hyprland";
+  ft.desktop.compositor = "mangowc";
 
   # Theming (ft-nixpalette → Stylix) — change theme here to retheme everything.
   # Theme IDs:  "builtin:base/<name>"  |  "user:base/<name>"  |  "user:derived/<name>"
