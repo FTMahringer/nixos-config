@@ -53,13 +53,6 @@
     ft-nixpkgs = {
       url = "github:FT-nixforge/ft-nixpkgs";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.ft-nixlaunch.follows = "ft-nixlaunch";
-    };
-
-    # ft-nixlaunch pinned directly so ft-nixpkgs picks up the same version
-    ft-nixlaunch = {
-      url = "github:FT-nixforge/ft-nixlaunch";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland = {
@@ -101,7 +94,7 @@
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
-              inputs.ft-nixlaunch.homeModules.default
+              inputs.ft-nixpkgs.homeModules.ft-nixlaunch
             ];
           }
         ];
