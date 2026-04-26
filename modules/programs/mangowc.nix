@@ -2,13 +2,6 @@
 
 let
   cfg = config.ft.programs.mangowc;
-
-  # wf-config 0.10.0 requires doctest which is missing in nixpkgs unstable.
-  # Pass -Dtests=disabled so meson doesn't look for it during configure.
-  wf-config-fixed = pkgs.wf-config.overrideAttrs (old: {
-    mesonFlags = (old.mesonFlags or []) ++ [ "-Dtests=disabled" ];
-  });
-  wayfire-fixed   = pkgs.wayfire.override { wf-config = wf-config-fixed; };
 in
 {
   options.ft.programs.mangowc = {
@@ -16,8 +9,19 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # wf-config 0.10.0 requires doctest which is missing in nixpkgs unstable.
+    # Apply as an overlay so every package in the closure (wayfire, wf-shell,
+    # wcm, …) gets the fixed wf-config without separate per-package overrides.
+    nixpkgs.overlays = [
+      (final: prev: {
+        wf-config = prev.wf-config.overrideAttrs (old: {
+          mesonFlags = (old.mesonFlags or []) ++ [ "-Dtests=disabled" ];
+        });
+      })
+    ];
+
     environment.systemPackages = with pkgs; [
-      wayfire-fixed
+      wayfire
       polkit_gnome
       networkmanagerapplet
       brightnessctl
@@ -53,7 +57,7 @@ in
           ${pkgs.tuigreet}/bin/tuigreet \
             --time \
             --remember \
-            --sessions ${wayfire-fixed}/share/wayland-sessions
+            --sessions ${pkgs.wayfire}/share/wayland-sessions
         '';
         user = "greeter";
       };

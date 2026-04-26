@@ -3,18 +3,14 @@
 let
   cfg = config.ft.desktop.mangowc;
 
-  # wf-config 0.10.0 requires doctest which is missing in nixpkgs unstable.
-  # Pass -Dtests=disabled so meson doesn't look for it during configure.
-  wf-config-fixed = pkgs.wf-config.overrideAttrs (old: {
-    mesonFlags = (old.mesonFlags or []) ++ [ "-Dtests=disabled" ];
-  });
-  wayfire-fixed   = pkgs.wayfire.override { wf-config = wf-config-fixed; };
 in
 lib.mkIf cfg.enable {
 
+  # wayfire and its plugins use the wf-config overlay applied in
+  # modules/programs/mangowc.nix — no per-package overrides needed here.
   home.packages = with pkgs; [
-    wayfire-fixed
-    wayfirePlugins.wf-shell  # plugins are version-compatible; no override needed
+    wayfire
+    wayfirePlugins.wf-shell
     wayfirePlugins.wcm
     mangohud
   ];
