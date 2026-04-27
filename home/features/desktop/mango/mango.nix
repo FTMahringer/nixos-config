@@ -35,11 +35,14 @@ lib.mkIf cfg.enable {
         # Reload config
         "SUPER,r,reload_config"
 
-        # Launcher (ft-nixlaunch)
+        # Launcher (ft-nixlaunch) — provide multiple ways to open it
         "SUPER,space,spawn,${launcherCmd}"
+        "SUPER,d,spawn,${launcherCmd}"
 
-        # Terminal
+        # Terminal — provide multiple ways to open it (for recovery)
         "SUPER,Return,spawn,${terminalCmd}"
+        "SUPER,t,spawn,${terminalCmd}"
+        "SUPER,Shift,Return,spawn,${terminalCmd}"
 
         # Quit mango (if supported by your build; otherwise remove)
         "SUPER,Escape,quit"
