@@ -42,7 +42,6 @@ lib.mkIf cfg.enable {
         # Terminal — provide multiple ways to open it (for recovery)
         "SUPER,Return,spawn,${terminalCmd}"
         "SUPER,t,spawn,${terminalCmd}"
-        "SUPER,Shift,Return,spawn,${terminalCmd}"
 
         # Quit mango (if supported by your build; otherwise remove)
         "SUPER,Escape,quit"
