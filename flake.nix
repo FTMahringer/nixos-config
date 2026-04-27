@@ -95,9 +95,6 @@
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
-              # Stub that declares programs.niri options so ft-nixlaunch's
-              # niri integration can reference them without erroring.
-              ./home/features/desktop/niri/niri-hm-stub.nix
             ];
           }
         ];
