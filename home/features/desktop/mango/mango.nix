@@ -79,9 +79,10 @@ lib.mkIf cfg.enable {
     border_radius=5
   '';
 
-  home.packages = with pkgs; [
-    mangohud
-    # Ensure a launcher is available even if not provided by pkgs overlay.
-    (lib.optional (pkgs ? ft-nixlaunch) pkgs.ft-nixlaunch)
-  ] |> lib.flatten;
+  home.packages =
+    with pkgs;
+    [
+      mangohud
+    ]
+    ++ lib.optionals (pkgs ? ft-nixlaunch) [ pkgs.ft-nixlaunch ];
 }
