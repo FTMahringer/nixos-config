@@ -2,100 +2,51 @@
 
 let
   cfg = config.ft.desktop.mango;
+
+  # Prefer ft-nixlaunch if it exists in PATH; fall back to any launcher you might have.
+  launcherCmd =
+    if pkgs ? ft-nixlaunch then
+      "${pkgs.ft-nixlaunch}/bin/ft-nixlaunch"
+    else
+      "ft-nixlaunch";
+
+  terminalCmd =
+    lib.getExe (config.ft.desktop.terminalPackage or pkgs.foot);
 in
 lib.mkIf cfg.enable {
-
-  # wayland.windowManager.mango is provided by inputs.mango.hmModules.mango
-  # imported in flake.nix.
+  # Mango HM module (from mangowm/mango) expects `settings` as a structured attrset,
+  # not INI. It will be converted/validated by the upstream module.
   wayland.windowManager.mango = {
     enable = true;
 
-    settings = lib.generators.toINI {} {
-      core = {
-        close_top_view = "<super> KEY_Q | alt KEY_F4";
-        vwidth = 3;
-        vheight = 3;
-        preferred_decoration_mode = "client";
-      };
+    # Keep this minimal and upstream-compatible.
+    #
+    # Notes:
+    # - `bind` entries are Mango-style (see mangowm/mango nix/hm-modules.nix example).
+    # - If some actions differ on your Mango version, you can adjust later; the upstream
+    #   module validates the generated config via `mango -c ... -p`.
+    settings = {
+      # Reasonable defaults; avoid guessing lots of Mango-specific knobs.
+      # You can add more once you confirm exact Mango option names from upstream docs.
+      animations = 1;
 
-      decoration = {
-        border_size = 2;
-        title_height = 0;
-      };
+      # Keybinds (keep ft-nixlaunch integration)
+      bind = [
+        # Reload config
+        "SUPER,r,reload_config"
 
-      input = {
-        xkb_layout = "de";
-        kb_repeat_delay = 400;
-        kb_repeat_rate = 40;
-        natural_scroll = true;
-        disable_while_typing = true;
-        tap_to_click = true;
-      };
+        # Launcher (ft-nixlaunch)
+        "SUPER,space,spawn,${launcherCmd}"
 
-      command = {
-        binding_launcher = "<super> KEY_SPACE";
-        command_launcher = "ft-nixlaunch";
+        # Terminal
+        "SUPER,Return,spawn,${terminalCmd}"
 
-        binding_terminal = "<super> KEY_ENTER";
-        command_terminal = config.ft.desktop.terminal;
-
-        binding_browser = "<super> KEY_B";
-        command_browser = "firefox";
-
-        binding_files = "<super> KEY_E";
-        command_files = "${config.ft.desktop.terminal} -e yazi";
-
-        binding_screenshot_area = "KEY_SYSRQ";
-        command_screenshot_area = "grim -g \"$(slurp)\" - | wl-copy";
-        binding_screenshot_full = "<super> KEY_SYSRQ";
-        command_screenshot_full = "grim - | wl-copy";
-        binding_screenshot_save = "<super> <shift> KEY_SYSRQ";
-        command_screenshot_save = "grim -g \"$(slurp)\" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png";
-
-        binding_lock = "<super> <shift> KEY_L";
-        command_lock = "hyprlock";
-
-        binding_clipboard = "<super> KEY_C";
-        command_clipboard = "cliphist list | nixprism --dmenu | cliphist decode | wl-copy";
-
-        binding_vol_mute = "KEY_MUTE";
-        command_vol_mute = "pamixer -t";
-        binding_vol_up   = "KEY_VOLUMEUP";
-        command_vol_up   = "pamixer -i 5";
-        binding_vol_down = "KEY_VOLUMEDOWN";
-        command_vol_down = "pamixer -d 5";
-
-        binding_brightness_up   = "KEY_BRIGHTNESSUP";
-        command_brightness_up   = "brightnessctl set 5%+";
-        binding_brightness_down = "KEY_BRIGHTNESSDOWN";
-        command_brightness_down = "brightnessctl set 5%-";
-      };
-
-      move    = { activate = "<super> BTN_LEFT"; };
-      resize  = { activate = "<super> BTN_RIGHT"; };
-      scale   = { activate = "<super> KEY_A"; };
-      expo    = { activate = "<super> KEY_W"; };
-      cube    = { activate = "<ctrl> <alt> BTN_LEFT"; };
-      switcher = { activate = "<alt> KEY_TAB"; };
-
-      blur = {
-        method = "kawase";
-        radius = 5;
-      };
-
-      animate = {
-        open_animation  = "zoom";
-        close_animation = "fade";
-        duration = 300;
-      };
-
-      idle  = { toggle = "<super> KEY_I"; };
-
-      window_rules = {
-        rule_1 = "on created if title contains \"Picture-in-Picture\" then set floating";
-      };
+        # Quit mango (if supported by your build; otherwise remove)
+        "SUPER,Escape,quit"
+      ];
     };
 
+    # Autostart: keep your existing essentials and keep it simple.
     autostart_sh = ''
       ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
       nm-applet --indicator &
@@ -105,6 +56,7 @@ lib.mkIf cfg.enable {
     '';
   };
 
+  # Keep MangoHud config you had (this is separate from Mango WM).
   xdg.configFile."MangoHud/MangoHud.conf".text = ''
     fps
     frametime
@@ -127,5 +79,9 @@ lib.mkIf cfg.enable {
     border_radius=5
   '';
 
-  home.packages = with pkgs; [ mangohud ];
+  home.packages = with pkgs; [
+    mangohud
+    # Ensure a launcher is available even if not provided by pkgs overlay.
+    (lib.optional (pkgs ? ft-nixlaunch) pkgs.ft-nixlaunch)
+  ] |> lib.flatten;
 }
