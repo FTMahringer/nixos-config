@@ -37,7 +37,7 @@
     # Adjust to your display.  Default = auto-detect, no scaling.
     # Example for a 4K display at 2× scale: "eDP-1,3840x2160@60,0x0,2"
     # ft.desktop.hyprland.monitor = ",preferred,auto,1";
-    # ft.desktop.mangowc.monitor  = ",preferred,auto,1";
+    # ft.desktop.mango.monitor  = ",preferred,auto,1";
     # ft.desktop.sway.monitor     = "*";
     # ft.desktop.niri.monitor     = "auto";
     # ft.desktop.river.monitor    = "";

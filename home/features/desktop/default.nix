@@ -7,7 +7,7 @@ in
   imports = [
     ./shared
     ./hyprland
-    ./mangowc
+    ./mango
     ./sway
     ./niri
     ./river
@@ -15,14 +15,14 @@ in
   ];
 
   options.ft.desktop.compositor = lib.mkOption {
-    type = lib.types.enum [ "hyprland" "mangowc" "sway" "niri" "river" ];
+    type = lib.types.enum [ "hyprland" "mango" "sway" "niri" "river" ];
     default = "hyprland";
     description = ''
       Desktop compositor / window manager to use.
       Pick exactly one — they are mutually exclusive.
 
       - "hyprland" — Hyprland tiling Wayland compositor          ← default
-      - "mangowc"  — Mango compositor + Wayfire
+      - "mango"  — Mango compositor + Wayfire
       - "sway"     — Sway / SwayFX tiling Wayland compositor
       - "niri"     — Niri scrolling Wayland compositor
       - "river"    — River dynamic tiling Wayland compositor
@@ -32,7 +32,7 @@ in
   # Automatically enable the selected compositor, disable all others
   config = {
     ft.desktop.hyprland.enable = lib.mkDefault (cfg.compositor == "hyprland");
-    ft.desktop.mangowc.enable  = lib.mkDefault (cfg.compositor == "mangowc");
+    ft.desktop.mango.enable  = lib.mkDefault (cfg.compositor == "mango");
     ft.desktop.sway.enable     = lib.mkDefault (cfg.compositor == "sway");
     ft.desktop.niri.enable     = lib.mkDefault (cfg.compositor == "niri");
     ft.desktop.river.enable    = lib.mkDefault (cfg.compositor == "river");

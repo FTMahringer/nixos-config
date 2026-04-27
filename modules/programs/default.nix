@@ -2,7 +2,7 @@
   imports = [
     ./git.nix
     ./hyprland.nix
-    ./mangowc.nix
+    ./mango.nix
     ./niri.nix
     ./river.nix
     ./sway.nix

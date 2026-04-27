@@ -75,6 +75,11 @@
       url = "github:MoonshotAI/kimi-cli/1.31.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    mango = {
+      url = "github:mangowm/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ft-nixpkgs, ... }: {
@@ -90,11 +95,13 @@
           # ft-nixpalette is NixOS-only. Stylix auto-propagates to HM users
           # via stylix.homeManagerIntegration (default: true).
           inputs.ft-nixpkgs.nixosModules.ft-nixpalette
+          inputs.mango.nixosModules.mango
 
           {
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.sharedModules = [
               inputs.ft-nixpkgs.homeModules.ft-nixlaunch
+              inputs.mango.hmModules.mango
             ];
           }
         ];
