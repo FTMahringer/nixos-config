@@ -73,16 +73,10 @@ lib.mkIf cfg.enable {
 
       move    = { activate = "<super> BTN_LEFT"; };
       resize  = { activate = "<super> BTN_RIGHT"; };
-      zoom    = { activate = "<super> KEY_Z"; };
       scale   = { activate = "<super> KEY_A"; };
       expo    = { activate = "<super> KEY_W"; };
       cube    = { activate = "<ctrl> <alt> BTN_LEFT"; };
       switcher = { activate = "<alt> KEY_TAB"; };
-
-      vswipe = {
-        enable_horizontal = true;
-        enable_vertical = true;
-      };
 
       blur = {
         method = "kawase";
@@ -97,7 +91,7 @@ lib.mkIf cfg.enable {
 
       idle  = { toggle = "<super> KEY_I"; };
 
-      window-rules = {
+      window_rules = {
         rule_1 = "on created if title contains \"Picture-in-Picture\" then set floating";
       };
     };
