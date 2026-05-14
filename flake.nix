@@ -9,17 +9,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nvf = {
-      url = "github:NotAShelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Modular flake structure - cleaner organization
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-
     # Unified formatting for all files
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
@@ -47,21 +36,12 @@
     # Impermanence - ephemeral root
     impermanence = {
       url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # FT-nixforge unified package registry
     ft-nixpkgs = {
       url = "github:FT-nixforge/ft-nixpkgs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    hyprland = {
-      url = "github:hyprwm/Hyprland/v0.54.3";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    niri = {
-      url = "github:niri-wm/niri/v26.04";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
